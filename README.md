@@ -45,4 +45,4 @@ snippet data model : !dmbg
 Sign up :
 Tao 1 cap token -> Publickey, -> publickeyString: luu vao model keyTokenModel
 
-@witter by : CongLuu
+@write by : CongLuu
