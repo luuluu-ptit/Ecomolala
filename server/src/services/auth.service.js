@@ -2,6 +2,8 @@
 const bcrypt = require('bcrypt');
 const KeyTokenService = require('./keyToken.service');
 const { createTokenPair } = require('../auth/authUtils');
+const shopModel = require('../models/shop.model');
+const crypto = require('crypto');
 
 const RoleShop = {
     SHOP: 'SHOP',
@@ -56,7 +58,7 @@ class AuthService {
                     userId: newShop._id,
                     email
                 }, privateKey, publicKey)
-                console.log(`Created token success`,tokens);
+                console.log(`Created token success`, tokens);
 
                 return {
                     code: 201,
@@ -67,8 +69,8 @@ class AuthService {
                 }
             }
             return {
-                code : 200,
-                metadata : null
+                code: 200,
+                metadata: null
             }
 
         } catch (error) {

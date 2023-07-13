@@ -2,11 +2,11 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const { db: { host, port, name } } = require('../configs/config.mongodb.js');
-const connectString = process.env.URL_MONGO_CLOUD;
+// const { db: { host, port, name } } = require('../configs/config.mongodb.js');
 // const connectString = `mongodb://${host}:${port}/${name}`;
-console.log(connectString, "-connectString");
-const countConnections = require('../helpers/check.connect.js');
+// const connectString = process.env.URL_MONGO_CLOUD;
+const connectString = `mongodb://127.0.0.1:27017/shopDev`;
+const { countConnect } = require('../helpers/check.connect');
 
 class Database {
     constructor() {
@@ -20,7 +20,7 @@ class Database {
             mongoose.set('debug', { color: true });
         }
         mongoose.connect(connectString, { maxPoolSize: 50 }).then(_ => {
-            console.log('Connected to MongooDb', countConnections());
+            console.log(`Connected to MongooDb`, countConnect());
         })
             .catch(err => console.log('Error connecting to MongooDB'));
     }
@@ -41,7 +41,7 @@ module.exports = instanceMongodb;
 
 
 
-//LEVE 0 : 
+//LEVEV 0 : 
 // 'use strict'
 
 // const mongoose = require('mongoose');
