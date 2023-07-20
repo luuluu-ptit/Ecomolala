@@ -7,13 +7,14 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
         //access token
         const accessToken = await JWT.sign(payload, privateKey, {
             algorithm: 'RS256',
-            expiresIn: ' 2 days',
+            expiresIn: '2d',
         })
 
         const refreshToken = await JWT.sign(payload, privateKey, {
             algorithm: 'RS256',
-            expiresIn: ' 7 days',
+            expiresIn: '7d',
         })
+        console.log(refreshToken, "refreshToken")
 
         //
         JWT.verify(accessToken, publicKey, (err, decode) => {
@@ -30,7 +31,12 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
             refreshToken
         }
     } catch (error) {
+        return {
+            code: "error",
+            mess: error.message,
+            status: 'error',
 
+        }
     }
 }
 

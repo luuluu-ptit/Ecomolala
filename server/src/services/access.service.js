@@ -4,6 +4,7 @@ const KeyTokenService = require('./keyToken.service');
 const { createTokenPair } = require('../auth/authUtils');
 const shopModel = require('../models/shop.model');
 const crypto = require('crypto');
+const { getInfoData } = require('../utils');
 
 const RoleShop = {
     SHOP: 'SHOP',
@@ -12,7 +13,7 @@ const RoleShop = {
     ADMIN: 'ADMIN',
 }
 
-class AuthService {
+class AccessService {
     static signUp = async ({ name, email, password }) => {
         try {
             //step 1: check email exist
@@ -35,16 +36,26 @@ class AuthService {
             if (newShop) {
                 //create private key and public key
                 const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-                    modulusLength: 4096
+                    modulusLength: 4096,
+                    publicKeyEncoding: {
+                        type: 'pkcs1',
+                        format: 'pem'
+                    },
+                    privateKeyEncoding: {
+                        type: 'pkcs1',
+                        format: 'pem'
+                    }
                 });
+                console.log({ privateKey, publicKey });
 
                 //save collection key 
-                console.log({ privateKey, publicKey });
 
                 const publicKeyString = await KeyTokenService.createKeyToken({
                     userId: newShop._id,
                     publicKey
                 });
+                // console.log('publicKeyString: ', publicKeyString);
+
 
                 if (!publicKeyString) {
                     return {
@@ -53,17 +64,16 @@ class AuthService {
                     }
                 }
 
+                const publicKeyObject = crypto.createPublicKey(publicKeyString);
+
                 //created tokens pair
-                const tokens = await createTokenPair({
-                    userId: newShop._id,
-                    email
-                }, privateKey, publicKey)
+                const tokens = await createTokenPair({ userId: newShop._id, email }, publicKeyObject, privateKey)
                 console.log(`Created token success`, tokens);
 
                 return {
                     code: 201,
                     metadata: {
-                        shop: newShop,
+                        shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: newShop }),
                         tokens
                     }
                 }
@@ -83,4 +93,4 @@ class AuthService {
     }
 }
 
-module.exports = AuthService;
+module.exports = AccessService;

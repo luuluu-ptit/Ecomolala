@@ -1,12 +1,14 @@
 @url_dev = http://localhost:5000/api/v1
 
 ###signup
-POST {{url_dev }}/shop/signup
+POST {{url_dev }}/shop/signup HTTP/1.1
 Content-Type: application/json
+x-api-key : 190938f3468c2ed9679832e5009ab6541d70b90b0e7a1516f4bc6020c923744946f2eacef10bc5d12bc5d6445e07d8080ccf604b6d9475e561afd0626fac7a2b
+
 
 {
-    "name" : "shop1",
-    "email" : "test1@gmail.com",
-    "password" : "password123456789"
+    "name" : "shop344ss",
+    "email" : "test4443@gmssail.com",
+    "password" : "passwosssrd44123"
 }
 
