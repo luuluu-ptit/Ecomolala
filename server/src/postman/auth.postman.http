@@ -1,14 +1,17 @@
 @url_dev = http://localhost:5000/api/v1
 
 ###signup
-POST {{url_dev }}/shop/signup HTTP/1.1
-Content-Type: application/json
-x-api-key : 190938f3468c2ed9679832e5009ab6541d70b90b0e7a1516f4bc6020c923744946f2eacef10bc5d12bc5d6445e07d8080ccf604b6d9475e561afd0626fac7a2b
+# POST {{url_dev }}/shop/signup HTTP/1.1
+# Content-Type: application/json
+# x-api-key : b14f9365f51b86d8a271b929d12a5a157f8ef333ab2fd56e81285a274ee53f46543bf6009efc460f620aa5d913be1b3f074f4aa58db6eac0d2cf0fa263b596aa
 
+# {
+#     "name" : "shop",
+#     "email" : "test@gmail.com",
+#     "password" : "password"
+# }
 
-{
-    "name" : "shop344ss",
-    "email" : "test4443@gmssail.com",
-    "password" : "passwosssrd44123"
-}
-
+POST {{url_dev }}/shop/logout HTTP/1.1
+x-api-key : b14f9365f51b86d8a271b929d12a5a157f8ef333ab2fd56e81285a274ee53f46543bf6009efc460f620aa5d913be1b3f074f4aa58db6eac0d2cf0fa263b596aa
+x-client-key : 64baa34f6d676939a2c3467f
+authorization : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGJhYTM0ZjZkNjc2OTM5YTJjMzQ2N2YiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjg5OTUzMzEwLCJleHAiOjE2OTAxMjYxMTB9.y2MrtuRE6OO44XoCO8bveVBghgeVBAmfTqjcZFfNw_k

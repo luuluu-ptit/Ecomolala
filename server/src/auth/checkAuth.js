@@ -1,4 +1,4 @@
-const findById = require("../services/apikey.service");
+const { findById } = require("../services/apikey.service");
 
 const HEADER = {
     API_KEY: 'x-api-key',
@@ -26,7 +26,7 @@ const apiKey = async (req, res, next) => {
         return next();
 
     } catch (error) {
-
+        throw new Error('Throw makes it go boom!')
     }
 }
 

@@ -8,4 +8,4 @@ const findById = async (key) => {
     return objectKey;
 }
 
-module.exports = findById;
+module.exports = { findById };
