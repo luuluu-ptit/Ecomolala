@@ -27,8 +27,7 @@ class KeyTokenService {
     }
 
     static findByUserId = async (userId) => {
-        // return await keytokenModel.findOne({ user: Types.ObjectId(userId) }).lean();
-        const result = await keytokenModel.findOne({ user: new Types.ObjectId(userId) }).lean();
+        const result = await keytokenModel.findOne({ user: new Types.ObjectId(userId) });
         // console.log('result:', result);
         return result;
     }
@@ -42,8 +41,31 @@ class KeyTokenService {
         } catch (error) {
             return error;
         }
-        // return await keytokenModel.remove(id);
     }
+
+    static deleteKeyById = async (userId) => {
+        try {
+            const filter = { user: new Types.ObjectId(userId) };
+            const result = await keytokenModel.deleteOne(filter);
+            // console.log('result: ', result);
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static findByRefreshTokenUsed = async (refreshToken) => {
+        const result = await keytokenModel.findOne({ refreshTokensUsed: refreshToken }).lean();
+        // console.log('result:', result);
+        return result;
+    }
+
+    static findByRefreshToken = async (refreshToken) => {
+        const result = await keytokenModel.findOne({ refreshToken });
+        // console.log('result:', result);
+        return result;
+    }
+
 }
 
 module.exports = KeyTokenService;

@@ -8,7 +8,8 @@ const { findByUserId } = require('../services/keyToken.service');
 const HEADER = {
     API_KEY: 'x-api-key',
     CLIENT_ID: 'x-client-id',
-    AUTHORIZATION: 'authorization'
+    AUTHORIZATION: 'authorization',
+    REFRESHTOKEN: 'x-rtoken-id',
 }
 
 const createTokenPair = async (payload, publicKey, privateKey) => {
@@ -80,34 +81,92 @@ const authentication = asyncHandler(async (req, res, next) => {
         }
 
         //3
-        const accessToken = req.headers[HEADER.AUTHORIZATION];
-        if (!accessToken) {
-            return {
-                code: 'xxxxxx',
-                message: 'Invalid Request'
-            }
-        }
-
-        try {
-            const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
-            if (decodeUser.userId !== userId) {
-                return {
-                    code: 'xxxxxx',
-                    message: 'Invalid UserID'
+        if (req.headers[HEADER.REFRESHTOKEN]) {
+            try {
+                const refreshToken = req.headers[HEADER.REFRESHTOKEN];
+                const decodeUser = JWT.verify(refreshToken, keyStore.privateKey);
+                if (decodeUser.userId !== userId) {
+                    return {
+                        code: 'xxxxxx',
+                        message: 'Invalid UserID'
+                    }
                 }
+                req.keyStore = keyStore;
+                req.user = decodeUser;
+                req.refreshToken = refreshToken;
+                return next();
+            } catch (error) {
+                throw error;
             }
-            req.keyStore = keyStore;
-            return next();
-        } catch (error) {
-            throw error;
         }
     } catch (error) {
         throw new Error(error)
     }
-
 })
+
+// const authentication = asyncHandler(async (req, res, next) => {
+//     /*
+//     1.Check UserId missing
+//     2.Get access token
+//     3.verify token
+//     4.check user in db
+//     5.check keystore with this userId
+//     6.OK all -> return next()
+//     */
+//     try {
+//         // console.log('AHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHI2');
+//         const userId = req.headers[HEADER.CLIENT_ID];
+//         // console.log('userId: ', userId);
+//         if (!userId) {
+//             return {
+//                 code: 'xxxxxx',
+//                 message: 'User does not exist'
+//             }
+//         }
+//         //2
+//         const keyStore = await findByUserId(userId);
+//         // console.log(keyStore, 'keyStore');
+//         if (!keyStore) {
+//             return {
+//                 code: 'xxxxxx',
+//                 message: 'Not Found Keystore'
+//             }
+//         }
+
+//         //3
+//         const accessToken = req.headers[HEADER.AUTHORIZATION];
+//         if (!accessToken) {
+//             return {
+//                 code: 'xxxxxx',
+//                 message: 'Invalid Request'
+//             }
+//         }
+
+//         try {
+//             const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
+//             if (decodeUser.userId !== userId) {
+//                 return {
+//                     code: 'xxxxxx',
+//                     message: 'Invalid UserID'
+//                 }
+//             }
+//             req.keyStore = keyStore;
+//             return next();
+//         } catch (error) {
+//             throw error;
+//         }
+//     } catch (error) {
+//         throw new Error(error)
+//     }
+
+// })
+
+const verifyJWT = async (token, keySecret) => {
+    return await JWT.verify(token, keySecret);
+}
 
 module.exports = {
     createTokenPair,
-    authentication
+    authentication,
+    verifyJWT
 }

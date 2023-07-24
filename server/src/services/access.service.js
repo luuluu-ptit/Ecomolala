@@ -3,7 +3,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const KeyTokenService = require('./keyToken.service');
-const { createTokenPair } = require('../auth/authUtils');
+const { createTokenPair, verifyJWT } = require('../auth/authUtils');
 const shopModel = require('../models/shop.model');
 const { getInfoData } = require('../utils');
 const { findByEmail } = require('./shop.service');
@@ -17,6 +17,118 @@ const RoleShop = {
 }
 
 class AccessService {
+
+    static handlerRefreshToken = async ({ keyStore, user, refreshToken }) => {
+        // check token used
+        const { userId, email } = user;
+        try {
+            if (keyStore.refreshTokensUsed.includes(refreshToken)) {
+                await KeyTokenService.deleteKeyById(userId);
+                return {
+                    code: 'xxxxxx',
+                    message: 'Something wrong! Pls relogin to continute...'
+                }
+            }
+
+            if (keyStore.refreshToken !== refreshToken) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'Shop not registed'
+                }
+            }
+
+            //check userId
+            const foundShop = findByEmail(email);
+            if (!foundShop) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'Shop not registed'
+                }
+            }
+
+            const tokens = await createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey);
+
+            //update 
+            await keyStore.updateOne({
+                $set: {
+                    refreshToken: tokens.refreshToken
+                },
+                $addToSet: {
+                    refreshTokensUsed: refreshToken // da dc su dung de lay token moi
+                }
+            });
+
+            return {
+                user,
+                tokens
+            }
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // static handlerRefreshToken = async (refreshToken) => {
+    //     // check token used
+    //     try {
+    //         const foundToken = await KeyTokenService.findByRefreshTokenUsed(refreshToken);
+    //         if (foundToken) {
+    //             //decode user
+    //             const { userId, email } = await verifyJWT(refreshToken, foundToken.privateKey);
+    //             console.log({ userId, email });
+
+    //             //del
+    //             await KeyTokenService.deleteKeyById(userId);
+
+    //             return {
+    //                 code: 'xxxxxx',
+    //                 message: 'Something wrong! Pls relogin to continute...'
+    //             }
+    //         }
+
+    //         //NO
+    //         const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
+    //         console.log(holderToken, 'holderToken');
+    //         if (!holderToken) {
+    //             return {
+    //                 code: 'xxxxxx',
+    //                 message: 'Shop not registed'
+    //             }
+    //         }
+
+    //         //verify
+    //         const { userId, email } = await verifyJWT(refreshToken, holderToken.privateKey);
+
+    //         //check userId
+    //         const foundShop = findByEmail(email);
+    //         if (!foundShop) {
+    //             return {
+    //                 code: 'xxxxxx',
+    //                 message: 'Shop not registed'
+    //             }
+    //         }
+
+    //         const tokens = await createTokenPair({ userId, email }, holderToken.publicKey, holderToken.privateKey);
+
+    //         //update 
+    //         await holderToken.updateOne({
+    //             $set: {
+    //                 refreshToken: tokens.refreshToken
+    //             },
+    //             $addToSet: {
+    //                 refreshTokensUsed: refreshToken // da dc su dung de lay token moi
+    //             }
+    //         });
+
+    //         return {
+    //             user: { userId, email },
+    //             tokens
+    //         }
+
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
 
     static logout = async (keyStore) => {
         try {

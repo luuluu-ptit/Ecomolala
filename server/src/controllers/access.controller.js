@@ -4,6 +4,26 @@ const AccessService = require("../services/access.service");
 
 class AuthController {
 
+    handlerRefreshToken = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Created token pair successfully',
+                metadata: await AccessService.handlerRefreshToken({
+                    keyStore: req.keyStore,
+                    user: req.user,
+                    refreshToken: req.refreshToken,
+                })
+            })
+
+            // return res.status(201).json({
+            //     message: 'Created token pair successfully',
+            //     metadata: await AccessService.handlerRefreshToken(req.body.refreshToken)
+            // })
+        } catch (error) {
+            next(error);
+        }
+    }
+
     logout = async (req, res, next) => {
         try {
             return res.status(201).json({
