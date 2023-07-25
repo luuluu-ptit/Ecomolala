@@ -42,7 +42,7 @@ class AccessService {
             if (!foundShop) {
                 return {
                     code: 'xxxxxx',
-                    message: 'Shop not registed'
+                    message: 'Shop not registed 2'
                 }
             }
 

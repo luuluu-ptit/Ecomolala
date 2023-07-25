@@ -8,7 +8,10 @@ class ProductController {
         try {
             return res.status(201).json({
                 message: 'Create new product successfully',
-                metadata: await ProductService.createProduct(req.body.product_type, req.body)
+                metadata: await ProductService.createProduct(req.body.product_type,{
+                    ...req.body,
+                    product_shop : req.user.userId
+                })
             })
         } catch (error) {
             next(error);
