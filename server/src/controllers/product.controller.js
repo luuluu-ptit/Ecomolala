@@ -18,12 +18,40 @@ class ProductController {
         }
     }
 
+    // PUT: publish product
+    publishProductByShop = async (req, res, next) => {
+        try {
+            return res.status(200).json({
+                message: 'Publish product by Shop successfully',
+                metadata: await ProductService.publishProductByShop({
+                    product_shop: req.user.userId,
+                    product_id: req.params.id,
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
     //QUERY
     getAllDraftsForShop = async (req, res, next) => {
         try {
             return res.status(200).json({
                 message: 'Get list draft product successfully',
                 metadata: await ProductService.findAllDraftsForShop({
+                    product_shop: req.user.userId
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    getAllPublishForShop = async (req, res, next) => {
+        try {
+            return res.status(200).json({
+                message: 'Get list publish product successfully',
+                metadata: await ProductService.findAllPublishForShop({
                     product_shop: req.user.userId
                 })
             })

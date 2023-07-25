@@ -1,5 +1,5 @@
 const { product, clothing, electronics } = require('../models/products.model');
-const { findAllDraftsForShop } = require('../models/repositories/product.repo');
+const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop } = require('../models/repositories/product.repo');
 class ProductFactory {
     static async createProduct(type, payload) {
         switch (type) {
@@ -13,9 +13,18 @@ class ProductFactory {
         }
     }
 
+    static async publishProductByShop({ product_shop, product_id }) {
+        return await publishProductByShop({ product_shop, product_id })
+    }
+
     static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }) {
         const query = { product_shop, isDraft: true };
         return await findAllDraftsForShop({ query, limit, skip })
+    }
+
+    static async findAllPublishForShop({ product_shop, limit = 50, skip = 0 }) {
+        const query = { product_shop, isPublished: true };
+        return await findAllPublishForShop({ query, limit, skip })
     }
 }
 
