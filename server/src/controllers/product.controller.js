@@ -6,17 +6,32 @@ class ProductController {
 
     createProduct = async (req, res, next) => {
         try {
-            return res.status(201).json({
+            return res.status(200).json({
                 message: 'Create new product successfully',
-                metadata: await ProductService.createProduct(req.body.product_type,{
+                metadata: await ProductService.createProduct(req.body.product_type, {
                     ...req.body,
-                    product_shop : req.user.userId
+                    product_shop: req.user.userId
                 })
             })
         } catch (error) {
             next(error);
         }
     }
+
+    //QUERY
+    getAllDraftsForShop = async (req, res, next) => {
+        try {
+            return res.status(200).json({
+                message: 'Get list draft product successfully',
+                metadata: await ProductService.findAllDraftsForShop({
+                    product_shop: req.user.userId
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
 
 }
 
