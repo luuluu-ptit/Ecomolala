@@ -2,7 +2,7 @@
 
 const AccessService = require("../services/access.service");
 
-class AuthController {
+class AccessController {
 
     handlerRefreshToken = async (req, res, next) => {
         try {
@@ -60,4 +60,4 @@ class AuthController {
     }
 }
 
-module.exports = new AuthController();
+module.exports = new AccessController();
