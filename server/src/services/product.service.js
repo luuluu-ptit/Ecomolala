@@ -1,5 +1,5 @@
 const { product, clothing, electronics } = require('../models/products.model');
-const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser } = require('../models/repositories/product.repo');
+const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct } = require('../models/repositories/product.repo');
 class ProductFactory {
     static async createProduct(type, payload) {
         switch (type) {
@@ -31,10 +31,20 @@ class ProductFactory {
         return await findAllPublishForShop({ query, limit, skip })
     }
 
-    static async searchProduct({keySearch}) {
-        return await searchProductByUser({keySearch})
+    static async searchProduct({ keySearch }) {
+        return await searchProductByUser({ keySearch })
     }
 
+    static async findAllProducts({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true } }) {
+        return await findAllProducts({
+            limit, sort, page, filter,
+            select: ['product_name', 'product_price', 'product_thumb']
+        })
+    }
+
+    static async findProduct({ product_id }) {
+        return await findProduct({ product_id, unselect: ['__v'] });
+    }
 
 }
 

@@ -7,8 +7,10 @@ const { authentication } = require('../../auth/authUtils');
 const router = express.Router();
 
 router.get('/search/:keySearch', asyncHandler(ProductController.getListSearchProduct));
+router.get('', asyncHandler(ProductController.findAllProducts));
+router.get('/:product_id', asyncHandler(ProductController.findProduct));
 
-//authentication
+//authentication - middeleware
 router.use(authentication);
 
 ////////////////////

@@ -1,5 +1,6 @@
 const { product, clothing, electronics } = require('../../models/products.model');
 const { Types } = require("mongoose");
+const { getSelectData, unGetSelectData } = require('../../utils');
 
 const findAllDraftsForShop = async ({ query, limit, skip }) => {
     return await queryProduct({ query, limit, skip });
@@ -45,7 +46,7 @@ const unPublishProductByShop = async ({ product_shop, product_id }) => {
         product_shop: new Types.ObjectId(product_shop),
         _id: new Types.ObjectId(product_id),
     });
-    console.log(foundProduct, "found::::");
+    // console.log(foundProduct, "found::::");
     if (!foundProduct) {
         return null;
     }
@@ -56,6 +57,24 @@ const unPublishProductByShop = async ({ product_shop, product_id }) => {
     return modifiedCount;
 }
 
+const findAllProducts = async ({ limit, sort, page, filter, select }) => {
+    const skip = (page - 1) * limit;
+    const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 };
+    const products = await product.findOne(filter)
+        .sort(sortBy)
+        .skip(skip)
+        .limit(limit)
+        .select(getSelectData(select))
+        .lean()
+
+    return products;
+}
+
+const findProduct = async ({ product_id, unselect }) => {
+    return await product.findById(product_id).select(unGetSelectData(unselect))
+}
+
+//findAllDraftsForShop AND findAllPublishForShop
 const queryProduct = async ({ query, limit, skip }) => {
     return await product.find(query).populate('product_shop', 'name email -_id')
         .sort({ updateAt: -1 })
@@ -65,11 +84,12 @@ const queryProduct = async ({ query, limit, skip }) => {
         .exec()
 }
 
-
 module.exports = {
     findAllDraftsForShop,
     findAllPublishForShop,
     publishProductByShop,
     unPublishProductByShop,
-    searchProductByUser
+    searchProductByUser,
+    findAllProducts,
+    findProduct
 }

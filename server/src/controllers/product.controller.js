@@ -80,7 +80,31 @@ class ProductController {
             return res.status(200).json({
                 message: 'Get list search product successfully',
                 metadata: await ProductService.searchProduct({
-                    keySearch: req.params 
+                    keySearch: req.params
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    findAllProducts = async (req, res, next) => {
+        try {
+            return res.status(200).json({
+                message: 'Get all Products product successfully',
+                metadata: await ProductService.findAllProducts(req.query)
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    findProduct = async (req, res, next) => {
+        try {
+            return res.status(200).json({
+                message: 'Get product successfully',
+                metadata: await ProductService.findProduct({
+                    product_id: req.params.product_id
                 })
             })
         } catch (error) {
