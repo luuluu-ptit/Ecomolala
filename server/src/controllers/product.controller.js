@@ -4,11 +4,27 @@ const ProductService = require("../services/product.service");
 
 class ProductController {
 
+    //CREATE PRODUCT
     createProduct = async (req, res, next) => {
         try {
             return res.status(200).json({
                 message: 'Create new product successfully',
                 metadata: await ProductService.createProduct(req.body.product_type, {
+                    ...req.body,
+                    product_shop: req.user.userId
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    //UPDATE PRODUCT
+    updateProduct = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Update product successfully',
+                metadata: await ProductService.updateProduct(req.body.product_type, req.params.product_id, {
                     ...req.body,
                     product_shop: req.user.userId
                 })

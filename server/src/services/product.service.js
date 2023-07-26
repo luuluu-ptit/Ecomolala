@@ -1,5 +1,5 @@
 const { product, clothing, electronics } = require('../models/products.model');
-const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct } = require('../models/repositories/product.repo');
+const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct, updateProduct_repo } = require('../models/repositories/product.repo');
 class ProductFactory {
     static async createProduct(type, payload) {
         switch (type) {
@@ -7,6 +7,18 @@ class ProductFactory {
                 return new Clothing(payload).createProduct();
             case 'Electronics':
                 return new Electronic(payload).createProduct();
+
+            default:
+                throw new Error(`Unknown type ${type}`);
+        }
+    }
+
+    static async updateProduct(type, product_id, payload) {
+        switch (type) {
+            case 'Clothing':
+                return new Clothing(payload).updateProduct(product_id);
+            case 'Electronics':
+                return new Electronic(payload).updateProduct(product_id);
 
             default:
                 throw new Error(`Unknown type ${type}`);
@@ -52,7 +64,7 @@ class Product {
     constructor({
         product_name, product_thumb, product_description,
         product_price, product_quantity, product_ratingsAverage, product_variations,
-        product_type, product_shop, product_attributes, isDraft, isPublished
+        product_type, product_attributes, isDraft, isPublished
     }) {
         this.product_name = product_name;
         this.product_thumb = product_thumb;
@@ -63,7 +75,7 @@ class Product {
         this.product_ratingsAverage = product_ratingsAverage;
         this.product_variations = product_variations;
         this.product_type = product_type;
-        this.product_shop = product_shop;
+        // this.product_shop = product_shop;
         this.product_attributes = product_attributes;
         this.isDraft = isDraft;
         this.isPublished = isPublished;
@@ -72,6 +84,11 @@ class Product {
     //create product
     async createProduct(product_id) {
         return await product.create({ ...this, _id: product_id });
+    }
+
+    //update product
+    async updateProduct(product_id, bodyUpdate) {
+        return await updateProduct_repo({ product_id, bodyUpdate, model: product });
     }
 }
 
@@ -89,6 +106,20 @@ class Clothing extends Product {
 
         return newProduct;
     }
+
+    async updateProduct(product_id) {
+        //1. remove attribute has null and undefined
+        //2. check xem update o dau ?
+
+        const objectParams = this;
+        if (objectParams.product_attributes) {
+            //update child
+            // await clothing.findByIdAndUpdate(product_id, objectParams, { new: true });
+            await updateProduct_repo({ product_id, objectParams, model: clothing });
+        }
+        const updateProduct = await super.updateProduct(product_id, objectParams);
+        return updateProduct;
+    }
 }
 
 class Electronic extends Product {
@@ -104,6 +135,20 @@ class Electronic extends Product {
         if (!newProduct) throw new Error('Cannot create');
 
         return newProduct;
+    }
+
+    async updateProduct(product_id) {
+        //1. remove attribute has null and undefined
+        //2. check xem update o dau ?
+
+        const objectParams = this;
+        if (objectParams.product_attributes) {
+            //update child
+            // await clothing.findByIdAndUpdate(product_id, objectParams, { new: true });
+            await updateProduct_repo({ product_id, objectParams, model: electronics });
+        }
+        const updateProduct = await super.updateProduct(product_id, objectParams);
+        return updateProduct;
     }
 }
 
