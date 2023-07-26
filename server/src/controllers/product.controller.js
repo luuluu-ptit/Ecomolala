@@ -24,7 +24,7 @@ class ProductController {
         try {
             return res.status(201).json({
                 message: 'Update product successfully',
-                metadata: await ProductService.updateProduct(req.body.product_type, req.params.product_id, {
+                metadata: await ProductService.updateProduct(req.body.product_type, req.params.productId, {
                     ...req.body,
                     product_shop: req.user.userId
                 })

@@ -1,5 +1,6 @@
 const { product, clothing, electronics } = require('../models/products.model');
-const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct, updateProduct_repo } = require('../models/repositories/product.repo');
+const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct, updateProductById_repo } = require('../models/repositories/product.repo');
+const { removeUndefinedObject, updateNestedObjectParser } = require('../utils');
 class ProductFactory {
     static async createProduct(type, payload) {
         switch (type) {
@@ -13,12 +14,12 @@ class ProductFactory {
         }
     }
 
-    static async updateProduct(type, product_id, payload) {
+    static async updateProduct(type, productId, payload) {
         switch (type) {
             case 'Clothing':
-                return new Clothing(payload).updateProduct(product_id);
+                return new Clothing(payload).updateProduct(productId);
             case 'Electronics':
-                return new Electronic(payload).updateProduct(product_id);
+                return new Electronic(payload).updateProduct(productId);
 
             default:
                 throw new Error(`Unknown type ${type}`);
@@ -87,8 +88,13 @@ class Product {
     }
 
     //update product
-    async updateProduct(product_id, bodyUpdate) {
-        return await updateProduct_repo({ product_id, bodyUpdate, model: product });
+    async updateProduct(productId, bodyUpdate) {
+        console.log('ssssssssssssssssssssssssssssssssssss1');
+        return await updateProductById_repo({ productId, bodyUpdate, model: product });
+        // return await product.findByIdAndUpdate(productId, bodyUpdate, {
+        //     new: true
+        // });
+
     }
 }
 
@@ -107,17 +113,24 @@ class Clothing extends Product {
         return newProduct;
     }
 
-    async updateProduct(product_id) {
+    async updateProduct(productId) {
         //1. remove attribute has null and undefined
         //2. check xem update o dau ?
+        const objectParams = removeUndefinedObject(this)
 
-        const objectParams = this;
         if (objectParams.product_attributes) {
-            //update child
-            // await clothing.findByIdAndUpdate(product_id, objectParams, { new: true });
-            await updateProduct_repo({ product_id, objectParams, model: clothing });
+            await updateProductById_repo({
+                productId,
+                bodyUpdate: updateNestedObjectParser(objectParams.product_attributes),
+                model: clothing
+            });
         }
-        const updateProduct = await super.updateProduct(product_id, objectParams);
+        const updateProduct = await super.updateProduct(
+            productId,
+            updateNestedObjectParser(objectParams)
+        );
+        // console.log('ssssssssssssssssssssssssssssssssssss2222222');
+        console.log(updateProduct, 'updateProductxxxxxxxxx');
         return updateProduct;
     }
 }
@@ -137,17 +150,17 @@ class Electronic extends Product {
         return newProduct;
     }
 
-    async updateProduct(product_id) {
+    async updateProduct(productId) {
         //1. remove attribute has null and undefined
         //2. check xem update o dau ?
 
-        const objectParams = this;
+        const objectParams = removeUndefinedObject(this);
+
         if (objectParams.product_attributes) {
             //update child
-            // await clothing.findByIdAndUpdate(product_id, objectParams, { new: true });
-            await updateProduct_repo({ product_id, objectParams, model: electronics });
+            await updateProductById_repo({ productId, objectParams, model: electronics });
         }
-        const updateProduct = await super.updateProduct(product_id, objectParams);
+        const updateProduct = await super.updateProduct(productId, objectParams);
         return updateProduct;
     }
 }

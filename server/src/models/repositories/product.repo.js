@@ -75,8 +75,10 @@ const findProduct = async ({ product_id, unselect }) => {
     return await product.findById(product_id).select(unGetSelectData(unselect))
 }
 
-const updateProduct_repo = async ({ product_id, bodyUpdate, model, isNew = true }) => {
-    return await model.findOneAndUpdate((product_id, bodyUpdate, { new: isNew }));
+const updateProductById_repo = async ({ productId, bodyUpdate, model, isNew = true }) => {
+    return await model.findByIdAndUpdate(productId, bodyUpdate, {
+        new: isNew
+    });
 }
 
 //findAllDraftsForShop AND findAllPublishForShop
@@ -97,5 +99,5 @@ module.exports = {
     searchProductByUser,
     findAllProducts,
     findProduct,
-    updateProduct_repo
+    updateProductById_repo
 }
