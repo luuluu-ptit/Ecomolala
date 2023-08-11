@@ -1,6 +1,6 @@
 const { product, clothing, electronics } = require('../models/products.model');
 const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct, updateProductById_repo } = require('../models/repositories/product.repo');
-const { removeUndefinedObject, updateNestedObjectParser } = require('../utils');
+const { removeUndefinedObject, updateNestedObjectParser, convertToObjectIdMongoDb } = require('../utils');
 class ProductFactory {
     static async createProduct(type, payload) {
         switch (type) {
@@ -53,19 +53,24 @@ class ProductFactory {
             limit, sort, page, filter,
             select: ['product_name', 'product_price', 'product_thumb']
         })
+        // const findAllProducts1 = await findAllProducts({
+        //     limit, sort, page, filter,
+        //     select: ['product_name', 'product_price', 'product_thumb']
+        // });
+        // console.log("findAllProducts:::::::", findAllProducts1);
+        // return findAllProducts1;
     }
 
     static async findProduct({ product_id }) {
         return await findProduct({ product_id, unselect: ['__v'] });
     }
-
 }
 
 class Product {
     constructor({
         product_name, product_thumb, product_description,
         product_price, product_quantity, product_ratingsAverage, product_variations,
-        product_type, product_attributes, isDraft, isPublished
+        product_type, product_attributes, isDraft, isPublished, product_shop
     }) {
         this.product_name = product_name;
         this.product_thumb = product_thumb;
@@ -76,7 +81,7 @@ class Product {
         this.product_ratingsAverage = product_ratingsAverage;
         this.product_variations = product_variations;
         this.product_type = product_type;
-        // this.product_shop = product_shop;
+        this.product_shop = product_shop;
         this.product_attributes = product_attributes;
         this.isDraft = isDraft;
         this.isPublished = isPublished;
@@ -105,10 +110,10 @@ class Clothing extends Product {
             ...this.product_attributes,
             product_shop: this.product_shop
         });
-        if (!newClothing) throw new Error('Cannot create');
+        if (!newClothing) throw new Error('Cannot create Clothing product');
 
         const newProduct = await super.createProduct(newClothing._id);
-        if (!newProduct) throw new Error('Cannot create');
+        if (!newProduct) throw new Error('Cannot create Clothing product');
 
         return newProduct;
     }

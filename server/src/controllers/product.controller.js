@@ -93,6 +93,7 @@ class ProductController {
     //SEARCH PRODUCT (USER)
     getListSearchProduct = async (req, res, next) => {
         try {
+            // console.log(req.params, "req.paramsreq.params");
             return res.status(200).json({
                 message: 'Get list search product successfully',
                 metadata: await ProductService.searchProduct({
@@ -127,8 +128,6 @@ class ProductController {
             next(error);
         }
     }
-
-
 }
 
 module.exports = new ProductController();

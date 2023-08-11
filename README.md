@@ -47,4 +47,7 @@ VTCPay 2023
   - Sign up :
   - Tao 1 cap token -> Publickey, -> publickeyString: luu vao model keyTokenModel
 
+- tại sao phải độc lập inventory và product : sử dụng cho mục đích khác nhau (product : số sản phẩm có sẵn để bán; inventory : lưu thông tin mức độ tồn kho)
+
+
 @write by : CongLuu
