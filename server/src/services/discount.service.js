@@ -16,15 +16,15 @@ const { convertToObjectIdMongoDb } = require("../utils");
 class discountService {
     static async createDiscount(payload) {
         const {
-            name, description, type, value, maxValue, code, discount_start_date, discount_end_date,
+            name, description, type, value, maxValue, code, startDate, endDate,
             max_uses, uses_count, users_used, max_uses_per_user,
             min_order_value, shopId, is_active, applies_to, product_ids
         } = payload;
 
-        if (new Date() < new Date(discount_start_date) || new Date() > new Date(discount_end_date)) {
+        if (new Date() < new Date(startDate) || new Date() > new Date(endDate)) {
             throw new Error('Cannot create discount');
         }
-        if (new Date(discount_end_date) < new Date(discount_start_date)) {
+        if (new Date(endDate) < new Date(startDate)) {
             throw new Error('Cannot create discount');
         }
         const foundDiscount = await discountModel.findOne({
@@ -33,7 +33,7 @@ class discountService {
         }).lean();
 
         if (foundDiscount && foundDiscount.discount_is_active) {
-            throw new Error('Discount not exists');
+            throw new Error('Discount exists');
         }
 
         const newDiscount = await discountModel.create({
@@ -43,8 +43,8 @@ class discountService {
             discount_value: value,
             discount_max_value: maxValue,
             discount_code: code,
-            discount_start_date: new Date(discount_start_date),
-            discount_end_date: new Date(discount_end_date),
+            discount_start_date: new Date(startDate),
+            discount_end_date: new Date(endDate),
             discount_max_uses: max_uses, //so luong discount
             discount_uses_count: uses_count,  //so discount da su dung
             discount_users_used: users_used, //ds user da su dung
@@ -59,9 +59,48 @@ class discountService {
         return newDiscount;
     }
 
-    // static async updateDiscountService{
+    static async updateDiscountService(discount_id, payload) {
+        const {
+            name, description, type, value, maxValue, code, startDate, endDate,
+            max_uses, max_uses_per_user,
+            min_order_value, shopId, is_active, applies_to, product_ids
+        } = payload;
 
-    // }
+        if (new Date() < new Date(startDate) || new Date() > new Date(endDate)) {
+            throw new Error('Cannot UpdateCreate discount');
+        }
+        if (new Date(endDate) < new Date(startDate)) {
+            throw new Error('Cannot UpdateCreate discount');
+        }
+        const foundDiscount = await discountModel.findOne({
+            _id: convertToObjectIdMongoDb(discount_id),
+            discount_shopId: convertToObjectIdMongoDb(shopId),
+        }).lean();
+
+        console.log(foundDiscount, "XXXYYY");
+        if (!foundDiscount) {
+            throw new Error('Discount not exists');
+        }
+
+        const newDiscount = await discountModel.updateOne({
+            discount_name: name,
+            discount_description: description,
+            discount_type: type, //percentage
+            discount_value: value,
+            discount_max_value: maxValue,
+            discount_code: code,
+            discount_start_date: new Date(startDate),
+            discount_end_date: new Date(endDate),
+            discount_max_uses: max_uses, //so luong discount
+            discount_max_uses_per_user: max_uses_per_user, //so discount duoc ap dung tren 1 user
+            discount_min_order_value: min_order_value || 0, // gia tri don hang nho nhat
+            discount_is_active: is_active,
+            discount_applies_to: applies_to,
+            discount_product_ids: applies_to === 'all' ? [] : product_ids,
+        });
+
+        return newDiscount;
+    }
 
     static async getAllDiscountWithProduct(payload) {
         //lấy những sp thuộc discount này
@@ -216,7 +255,6 @@ class discountService {
 
         return result;
     }
-
 }
 
 

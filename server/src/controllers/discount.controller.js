@@ -20,22 +20,22 @@ class DiscountController {
     }
 
     //UPDATE Discount
-    // updateDiscountService = async (req, res, next) => {
-    //     try {
-    //         return res.status(201).json({
-    //             message: 'Update Discount successfully',
-    //             metadata: await discountService.updateDiscountService(req.body.product_type, req.params.productId, {
-    //                 ...req.body,
-    //                 product_shop: req.user.userId
-    //             })
-    //         })
-    //     } catch (error) {
-    //         next(error);
-    //     }
-    // }
+    updateDiscountService = async (req, res, next) => {
+        try {
+            // console.log("::::xxxx", req.user.userId);
+            return res.status(201).json({
+                message: 'Update Discount successfully',
+                metadata: await discountService.updateDiscountService(req.params.discount_id, {
+                    ...req.body,
+                    shopId: req.user.userId
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
 
     //get All Discount With Product
-
     getDiscountAmount = async (req, res, next) => {
         //get Discount Amount (USER)
         try {
@@ -51,6 +51,7 @@ class DiscountController {
         }
     }
 
+    // getAllDiscountWithProduct
     getAllDiscountWithProduct = async (req, res, next) => {
         try {
             return res.status(200).json({
@@ -80,30 +81,34 @@ class DiscountController {
     }
 
     // delete Discount
-    // deleteDiscount = async (req, res, next) => {
-    //     try {
-    //         return res.status(200).json({
-    //             message: 'Delete Discount successfully',
-    //             metadata: await discountService.deleteDiscount(req.query)
-    //         })
-    //     } catch (error) {
-    //         next(error);
-    //     }
-    // }
+    deleteDiscount = async (req, res, next) => {
+        try {
+            console.log('XXXXXXXX', req.query);
+            return res.status(200).json({
+                message: 'Delete Discount successfully',
+                metadata: await discountService.deleteDiscount({
+                    shopId: req.user.userId,
+                    codeId: req.query.codeId
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
 
     // cancel Discount
-    // cancelDiscount = async (req, res, next) => {
-    //     try {
-    //         return res.status(200).json({
-    //             message: 'Cancel Discount successfully',
-    //             metadata: await discountService.cancelDiscount({
-    //                 product_id: req.params.product_id
-    //             })
-    //         })
-    //     } catch (error) {
-    //         next(error);
-    //     }
-    // }
+    cancelDiscount = async (req, res, next) => {
+        try {
+            return res.status(200).json({
+                message: 'Cancel Discount successfully',
+                metadata: await discountService.cancelDiscount({
+                    ...req.body,
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new DiscountController();

@@ -23,7 +23,6 @@ require('./data/init.mongodb.lv1');
 // int routes 
 app.use("/", require('./routers'));
 
-
 //handling errors.
 app.use((req, res, next) => {
     const error = new Error("Not Found");
