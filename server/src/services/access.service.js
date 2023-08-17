@@ -11,9 +11,9 @@ const { removeKeyById } = require('./keyToken.service');
 
 const RoleShop = {
     SHOP: 'SHOP',
-    WITTER: 'WITTER',
-    EDITOR: 'EDITOR',
+    USER: 'USER',
     ADMIN: 'ADMIN',
+    // GUEST: 'GUEST',
 }
 
 class AccessService {
@@ -203,7 +203,7 @@ class AccessService {
             const hashPassword = await bcrypt.hash(password, 10);
 
             const newShop = await shopModel.create({
-                name, email, password: hashPassword, roles: [RoleShop.SHOP]
+                name, email, password: hashPassword, roles: [RoleShop.SHOP, RoleShop.USER]
             })
 
             if (newShop) {

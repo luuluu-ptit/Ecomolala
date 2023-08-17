@@ -250,8 +250,14 @@ class discountService {
             $inc: {
                 discount_max_uses: 1,
                 discount_uses_count: -1,
-            }
+            },
+            // $set: {
+            //     discount_max_uses: Math.min(Math.max(0, 100), foundDiscount.discount_max_uses + 1),
+            //     discount_uses_count: Math.min(Math.max(0, 100), foundDiscount.discount_uses_count - 1),
+            // },
         })
+
+        console.log("resultXXXX:::", result);
 
         return result;
     }

@@ -1,4 +1,5 @@
 const { product, clothing, electronics } = require('../models/products.model');
+const { insertInventory } = require('../models/repositories/inventory.repo');
 const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct, updateProductById_repo } = require('../models/repositories/product.repo');
 const { removeUndefinedObject, updateNestedObjectParser, convertToObjectIdMongoDb } = require('../utils');
 class ProductFactory {
@@ -51,7 +52,7 @@ class ProductFactory {
     static async findAllProducts({ limit = 50, sort = 'ctime', page = 1, filter = { isPublished: true } }) {
         return await findAllProducts({
             limit, sort, page, filter,
-            select: ['product_name', 'product_price', 'product_thumb']
+            select: ['product_name', 'product_price', 'product_thumb', 'product_shop']
         })
         // const findAllProducts1 = await findAllProducts({
         //     limit, sort, page, filter,
@@ -89,12 +90,21 @@ class Product {
 
     //create product
     async createProduct(product_id) {
-        return await product.create({ ...this, _id: product_id });
+        const newProduct = await product.create({ ...this, _id: product_id });
+        if (newProduct) {
+            //add product_stock to inventory
+            await insertInventory({
+                productId: newProduct._id,
+                shopId: this.product_shop,
+                stock: this.product_quantity
+            })
+        }
+        return newProduct;
     }
 
     //update product
     async updateProduct(productId, bodyUpdate) {
-        console.log('ssssssssssssssssssssssssssssssssssss1');
+        // console.log('ssssssssssssssssssssssssssssssssssss1');
         return await updateProductById_repo({ productId, bodyUpdate, model: product });
         // return await product.findByIdAndUpdate(productId, bodyUpdate, {
         //     new: true

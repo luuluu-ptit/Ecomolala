@@ -121,6 +121,15 @@ const queryProduct = async ({ query, limit, skip }) => {
     }
 }
 
+const getProductById = async (productId) => {
+    try {
+        return await product.findOne({ _id: convertToObjectIdMongoDb(productId) }).lean();
+    } catch (error) {
+        console.log("Error while getProductById:", error);
+        throw error;
+    }
+}
+
 module.exports = {
     findAllDraftsForShop,
     findAllPublishForShop,
@@ -129,7 +138,8 @@ module.exports = {
     searchProductByUser,
     findAllProducts,
     findProduct,
-    updateProductById_repo
+    updateProductById_repo,
+    getProductById
 }
 
 // -------------------------------
