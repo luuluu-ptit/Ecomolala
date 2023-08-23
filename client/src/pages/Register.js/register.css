@@ -1,0 +1,28 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+    border-radius: 12px;
+    height: 400px;
+    min-width: 20%;
+    background-color: rgb(238, 77, 45);
+    text-align:center;
+  }
+  
+  .register-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+  .register-error{
+    margin-top:1rem;
+    align-self:center;
+    color:rgb(255, 0, 55);
+  }
+  
+  .login-register {
+    margin: 2rem 1rem 0 1rem;
+    font-size: 1rem;
+    font-weight: 300;
+  }

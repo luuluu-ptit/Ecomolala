@@ -44,6 +44,7 @@ class DiscountController {
                 message: 'get Discount Amount (USER) successfully',
                 metadata: await discountService.getDiscountAmount({
                     ...req.body,
+                    userId: req.user.userId
                 })
             })
         } catch (error) {
@@ -103,6 +104,7 @@ class DiscountController {
                 message: 'Cancel Discount successfully',
                 metadata: await discountService.cancelDiscount({
                     ...req.body,
+                    userId: req.user.userId
                 })
             })
         } catch (error) {

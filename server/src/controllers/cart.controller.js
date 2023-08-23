@@ -9,7 +9,10 @@ class CartController {
         try {
             return res.status(200).json({
                 message: 'Create new cart successfully',
-                metadata: await cartService.addProductToCart(req.body)
+                metadata: await cartService.addProductToCart({
+                    ...req.body,
+                    userId: req.user.userId
+                })
             })
         } catch (error) {
             next(error);
@@ -22,7 +25,10 @@ class CartController {
         try {
             return res.status(201).json({
                 message: 'Update Cart successfully',
-                metadata: await cartService.updateProductQuantity(req.body)
+                metadata: await cartService.updateProductQuantity({
+                    ...req.body,
+                    userId: req.user.userId
+                })
             })
         } catch (error) {
             next(error);
@@ -34,7 +40,10 @@ class CartController {
         try {
             return res.status(200).json({
                 message: 'delete Cart successfully',
-                metadata: await cartService.deletItemCart(req.body)
+                metadata: await cartService.deletItemCart({
+                    ...req.body,
+                    userId: req.user.userId
+                })
             })
         } catch (error) {
             next(error);
@@ -46,7 +55,10 @@ class CartController {
         try {
             return res.status(200).json({
                 message: 'Get list cart successfully',
-                metadata: await cartService.getListCart(req.query)
+                // metadata: await cartService.getListCart(req.query)
+                metadata: await cartService.getListCart({
+                    userId: req.user.userId
+                })
             })
         } catch (error) {
             next(error);

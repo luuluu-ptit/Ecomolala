@@ -4,6 +4,7 @@ const express = require('express');
 const ProductController = require('../../controllers/product.controller');
 const asyncHandler = require('../../helpers/asyncHandler');
 const { authentication } = require('../../auth/authUtils');
+const { authPermissions } = require('../../auth/authPermission');
 const router = express.Router();
 
 router.get('/search/:keySearch', asyncHandler(ProductController.getListSearchProduct));
@@ -13,7 +14,9 @@ router.get('/:product_id', asyncHandler(ProductController.findProduct));
 //authentication - middeleware
 router.use(authentication);
 
-////////////////////
+// check permission
+router.use(authPermissions(["SHOP"]));
+
 router.post('', asyncHandler(ProductController.createProduct));
 router.patch('/:productId', asyncHandler(ProductController.updateProduct));
 router.post('/publish/:id', asyncHandler(ProductController.publishProductByShop));

@@ -2,16 +2,6 @@ VTCPay 2023
 
 - Build a COMPLETE Fullstack Responsive MERN App SOCIAL NETWORK| React, MongoDB, MUI, NodeJS, and Express
 
-- Our Team :
-
-  - Phạm Việt Hoàng,
-  - Phùng Tấn Đăng Khoa,
-  - Phạm Trường Anh,
-  - Lưu Nhân Công
-  - Nguyễn Văn Hiếu,
-  - Nguyễn Viết Huy,
-  - Nguyễn Phú Toản
-
 - Detail project report :
 
   - Link postman : https://app.getpostman.com/join-team?invite_code=1f5e27c19afda1939f3734e46bfbedb6&target_code=8761e71f9f5769219cc7ef901e3bc539
