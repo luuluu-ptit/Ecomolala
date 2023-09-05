@@ -19,7 +19,7 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
             // algorithm: 'RS256',
             expiresIn: '15d',
         })
-        console.log(accessToken, "accessToken");
+        // console.log(accessToken, "accessToken");
 
         const refreshToken = await JWT.sign(payload, privateKey, {
             // algorithm: 'RS256',
@@ -132,15 +132,6 @@ const verifyJWT = async (token, keySecret) => {
     return await JWT.verify(token, keySecret);
 }
 
-// const isAdmin = asyncHandler((req, res, next) => {
-//     const { role } = req.user
-//     if (role !== 'admin')
-//         return res.status(401).json({
-//             success: false,
-//             mes: ' REQUIRE ADMIN ROLE'
-//         })
-//     next()
-// })
 
 module.exports = {
     createTokenPair,

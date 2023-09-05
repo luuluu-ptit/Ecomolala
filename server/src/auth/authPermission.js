@@ -1,5 +1,5 @@
 const shopModel = require("../models/shop.model");
-const { convertToObjectIdMongoDb, getSelectData } = require("../utils");
+// const { convertToObjectIdMongoDb, getSelectData } = require("../utils");
 
 const authPermissions = permissions => {
     return async (req, res, next) => {
@@ -18,7 +18,7 @@ const authPermissions = permissions => {
             }
 
             const { roles } = user;
-            console.log(roles, "XXX::");
+            // console.log(roles, "XXX::");
             // if (!permissions.includes(roles)) {
             //     return res.status(401).json('You don not have permission !');
             // }
@@ -28,7 +28,7 @@ const authPermissions = permissions => {
             return next();
 
         } catch (error) {
-            throw new Error('Throw makes it go boom!')
+            throw new Error('You don not have permission !')
         }
     }
 }

@@ -97,6 +97,7 @@ class cartService {
         }
         if (quantity === 0) {
             //delete product
+            return await cartService.deletItemCart({ userId, productId })
         }
 
         return await cartService.updateUserCartquantity({

@@ -25,7 +25,8 @@ var cartSchema = new Schema({
         */
     },
     cart_count_product: { type: Number, default: 0 },
-    cart_userId: { type: String, required: true },
+    // cart_userId: { type: String, required: true },
+    cart_userId: { type: Schema.Types.ObjectId, ref: 'Shop' },
 }, {
     collection: COLLECTION_NAME,
     timestamps: {
