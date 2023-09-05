@@ -18,7 +18,7 @@
 
 - Curently being researched and developed : 
     + Xử lý hướng tiếp cận cho quản lý đơn hàng và hàng tồn kho
-    + Thanh toán
+    + Thanh toán, Vận chuyển
     + FontEnd
 
 - Config :
