@@ -5,7 +5,7 @@
 
     + Link drive, docs and diagram : https://drive.google.com/drive/folders/1XE3ptsdTh0jDfGNnlLTUivo6YX95n0Me?usp=sharing
 
-- API (Done) : 
+- API (Done 26) : 
     + Login [PUBLIC]
     + Sign up [PUBLIC]
     + Logout [USER, SHOP]
