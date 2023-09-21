@@ -14,7 +14,10 @@ router.post('/shop/login', asyncHandler(AccessController.login));
 //authentication
 router.use(authentication);
 router.post('/shop/convertRoleUsertoSeller', asyncHandler(AccessController.convertRoleUsertoSeller));
+router.post('/shop/cancellationOfSales', asyncHandler(AccessController.cancellationOfSales));
+
 router.post('/shop/changePassword', asyncHandler(AccessController.changePassword));
+router.post('/shop/addLikedProduct/:id', asyncHandler(AccessController.addLikedProduct));
 
 ////////////////////
 router.post('/shop/logout', asyncHandler(AccessController.logout));

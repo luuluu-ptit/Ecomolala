@@ -70,12 +70,37 @@ class AccessController {
         }
     }
 
+    cancellationOfSales = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Convert role user to seller successfully',
+                metadata: await AccessService.cancellationOfSales(req.user)
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
     changePassword = async (req, res, next) => {
         try {
             return res.status(201).json({
                 message: 'Change password successfully',
                 metadata: await AccessService.changePassword({
                     pairPassword: req.body,
+                    deCode: req.user
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    addLikedProduct = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Change password successfully',
+                metadata: await AccessService.addLikedProduct({
+                    productId: req.params.id,
                     deCode: req.user
                 })
             })

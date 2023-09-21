@@ -33,7 +33,13 @@ var shopSchema = new Schema({
     roles: {
         type: Array,
         default: [],
-    }
+    },
+    likedProduct: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Product',
+        },
+    ],
 }, {
     timestamps: true,
     collection: COLLECTION_NAME

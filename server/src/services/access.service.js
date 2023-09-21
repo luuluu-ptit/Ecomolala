@@ -5,7 +5,8 @@ const bcrypt = require('bcrypt');
 const KeyTokenService = require('./keyToken.service');
 const { createTokenPair, verifyJWT } = require('../auth/authUtils');
 const shopModel = require('../models/shop.model');
-const { getInfoData } = require('../utils');
+const { product: productModel } = require('../models/products.model');
+const { getInfoData, removeData } = require('../utils');
 const { findByEmail } = require('./shop.service');
 const { removeKeyById } = require('./keyToken.service');
 
@@ -299,6 +300,39 @@ class AccessService {
         }
     }
 
+    static cancellationOfSales = async ({ userId }) => {
+        try {
+            const user = await shopModel.findById(userId);
+            if (!user) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'User not found'
+                }
+            }
+            if (!user.roles.includes(RoleShop.SHOP) && !user.roles.includes(RoleShop.ADMIN)) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'User is not yet a seller'
+                }
+            }
+
+            // removeData(user.roles, RoleShop.SHOP);
+            const newRoles = user.roles.filter(role => role !== RoleShop.SHOP);
+            user.roles = newRoles;
+            user.verify = false;
+            user.status = 'inactive';
+            await user.save();
+
+            return user;
+        } catch (error) {
+            return {
+                code: 'xxxxxx',
+                message: error.message,
+                status: 'error'
+            }
+        }
+    }
+
     static changePassword = async ({ pairPassword, deCode }) => {
         try {
             const { oldPassword, newPassword } = pairPassword
@@ -323,6 +357,50 @@ class AccessService {
                     message: 'Invalid old password'
                 }
             }
+        } catch (error) {
+            return {
+                code: 'xxxxxx',
+                message: error.message,
+                status: 'error'
+            }
+        }
+    };
+
+    // api like product list
+    static addLikedProduct = async ({ productId, deCode }) => {
+        try {
+            const { userId } = deCode;
+            const user = await shopModel.findById(userId);
+            const product = await productModel.findById(productId);
+            if (!user) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'User not found'
+                }
+            }
+
+            if (user.likedProduct.includes(productId)) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'Product already liked'
+                }
+            }
+
+            // console.log("XXXXXX", product.product_shop === userId);
+            if (product.product_shop == userId) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'San pham nay thuoc ve cua hang cua ban'
+                }
+            }
+
+            user.likedProduct.push(productId);
+            await user.save();
+            return {
+                code: 'xxxxxx',
+                message: 'Product added to liked list'
+            }
+
         } catch (error) {
             return {
                 code: 'xxxxxx',

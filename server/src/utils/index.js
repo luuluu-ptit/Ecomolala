@@ -9,6 +9,10 @@ const getInfoData = ({ fileds = [], object = {} }) => {
     return _.pick(object, fileds);
 }
 
+const removeData = (arr, elementToRemove) => {
+    _.pull(arr, elementToRemove);
+}
+
 //['a', 'b'] ---> {a: 1, b: 1}
 const getSelectData = (select = []) => {
     return Object.fromEntries(select.map(el => [el, 1]));
@@ -22,7 +26,7 @@ const unGetSelectData = (select = []) => {
 const removeUndefinedObject = obj => {
     Object.keys(obj).forEach(key => {
         if (obj[key] == null) {
-            delete obj[key]; 
+            delete obj[key];
         }
     })
 
@@ -70,6 +74,7 @@ const updateNestedObjectParser = obj => {
 module.exports = {
     getInfoData,
     getSelectData,
+    removeData,
     unGetSelectData,
     removeUndefinedObject,
     updateNestedObjectParser,
