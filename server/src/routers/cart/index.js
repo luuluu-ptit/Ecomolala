@@ -10,7 +10,7 @@ const router = express.Router();
 router.use(authentication);
 
 // check permission
-// router.use(authPermissions(["SHOP"]));
+// router.use(authPermissions(["USER"]));
 
 router.post('', asyncHandler(CartController.addProductToCart));
 router.post('/update', asyncHandler(CartController.updateProductQuantity));

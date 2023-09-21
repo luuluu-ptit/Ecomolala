@@ -8,20 +8,43 @@
 
 - API (Done 28) :
 
+  <h3>USER/SHOP-ACCESS<h3>
   - Login [PUBLIC]
   - Sign up [PUBLIC]
-  - Logout [USER, SHOP]
-  - Tokens [USER, SHOP]
-  - CRUD product [SHOP]
-  - Fillter, search product [USER]
-  - CRUD discount [SHOP]
-  - Cancel, get amount, get product with discount code [USER]
-  - Xây dựng API giỏ hàng [USER]
+  - Authentication(middleware,permission) [PUBLIC]
+  - Convert role user to seller [PUBLIC]
+  - Change Password [PUBLIC]
+  - Handler RefreshToken [USER,SHOP]
+  - Logout  [USER,SHOP]
+  - Tokens [USER,SHOP]
+  <h3>PRODUCT<h3>
+  - Get List Search Product [PUBLIC]
+  - Find All Products [PUBLIC]
+  - Find Product [PUBLIC]
+  - Create Product [SHOP]
+  - Update Product [SHOP]
+  - Publish Product By Shop [SHOP]
+  - Unpublish Product By Shop [SHOP]
+  - Get All Drafts For Shop [SHOP]
+  - Get All publish for Shop [SHOP]
+  <h3>CART<h3>
+  - Add Product To Cart [USER,SHOP]
+  - Update Product Quantity [USER,SHOP]
+  - Delete Item Cart [USER,SHOP]
+  - Get List Cart [USER,SHOP]
+  <h3>DISCOUNT<h3>
+  - Get Discount Amount [USER]
+  - Get All Discount With Product [USER]
+  - Cancel Discount [USER]
+  - Create Discount [SHOP]
+  - Update Discount Service [SHOP]
+  - Get All Discount By Shop [SHOP]
+  - Delete Discount [SHOP]
 
 - Curently being researched and developed :
 
   - Xử lý hướng tiếp cận cho quản lý đơn hàng và hàng tồn kho
-  - Thanh toán
+  - Thanh toán, vận chuyển
   - FrontEnd
 
 - Config :
