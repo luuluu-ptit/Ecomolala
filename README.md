@@ -8,38 +8,38 @@
 
 - API (Done 28) :
 
-  <h3>USER/SHOP-ACCESS<h3>
-  - Login [PUBLIC]
-  - Sign up [PUBLIC]
-  - Authentication(middleware,permission) [PUBLIC]
-  - Convert role user to seller [PUBLIC]
-  - Change Password [PUBLIC]
-  - Handler RefreshToken [USER,SHOP]
-  - Logout  [USER,SHOP]
-  - Tokens [USER,SHOP]
-  <h3>PRODUCT<h3>
-  - Get List Search Product [PUBLIC]
-  - Find All Products [PUBLIC]
-  - Find Product [PUBLIC]
-  - Create Product [SHOP]
-  - Update Product [SHOP]
-  - Publish Product By Shop [SHOP]
-  - Unpublish Product By Shop [SHOP]
-  - Get All Drafts For Shop [SHOP]
-  - Get All publish for Shop [SHOP]
-  <h3>CART<h3>
-  - Add Product To Cart [USER,SHOP]
-  - Update Product Quantity [USER,SHOP]
-  - Delete Item Cart [USER,SHOP]
-  - Get List Cart [USER,SHOP]
-  <h3>DISCOUNT<h3>
-  - Get Discount Amount [USER]
-  - Get All Discount With Product [USER]
-  - Cancel Discount [USER]
-  - Create Discount [SHOP]
-  - Update Discount Service [SHOP]
-  - Get All Discount By Shop [SHOP]
-  - Delete Discount [SHOP]
+  <h5>USER/SHOP-ACCESS<h5>
+  - Login [PUBLIC] <br>
+  - Sign up [PUBLIC]<br>
+  - Authentication(middleware,permission) [PUBLIC]<br>
+  - Convert role user to seller [PUBLIC]<br>
+  - Change Password [PUBLIC]<br>
+  - Handler RefreshToken [USER,SHOP]<br>
+  - Logout  [USER,SHOP]<br>
+  - Tokens [USER,SHOP]<br>
+  <h5>PRODUCT<h5>
+  - Get List Search Product [PUBLIC]<br>
+  - Find All Products [PUBLIC]<br>
+  - Find Product [PUBLIC]<br>
+  - Create Product [SHOP]<br>
+  - Update Product [SHOP]<br>
+  - Publish Product By Shop [SHOP]<br>
+  - Unpublish Product By Shop [SHOP]<br>
+  - Get All Drafts For Shop [SHOP]<br>
+  - Get All publish for Shop [SHOP]<br>
+  <h5>CART<h5>
+  - Add Product To Cart [USER,SHOP]<br>
+  - Update Product Quantity [USER,SHOP]<br>
+  - Delete Item Cart [USER,SHOP]<br>
+  - Get List Cart [USER,SHOP]<br>
+  <h5>DISCOUNT<h5>
+  - Get Discount Amount [USER]<br>
+  - Get All Discount With Product [USER]<br>
+  - Cancel Discount [USER]<br>
+  - Create Discount [SHOP]<br>
+  - Update Discount Service [SHOP]<br>
+  - Get All Discount By Shop [SHOP]<br>
+  - Delete Discount [SHOP]<br>
 
 - Curently being researched and developed :
 
