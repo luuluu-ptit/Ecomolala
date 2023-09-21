@@ -109,7 +109,6 @@ class Product {
         // return await product.findByIdAndUpdate(productId, bodyUpdate, {
         //     new: true
         // });
-
     }
 }
 

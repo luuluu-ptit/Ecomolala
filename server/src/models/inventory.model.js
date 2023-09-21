@@ -30,7 +30,7 @@ module.exports = {
 
 // dat hang => tru so luong o hang ton kho...
 /*
-    + product : thuoc tinh shop ban, duyet, hien thi sp, 
+    + product: thuoc tinh shop ban, duyet, hien thi sp, 
     + inventory: luu tru thong tin ve muc ton kho :cong no, don vi, vi tri ton kho, thong tin lien quan..., 
     + order, 
     + cart, 

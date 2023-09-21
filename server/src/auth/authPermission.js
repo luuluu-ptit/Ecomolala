@@ -18,10 +18,6 @@ const authPermissions = permissions => {
             }
 
             const { roles } = user;
-            // console.log(roles, "XXX::");
-            // if (!permissions.includes(roles)) {
-            //     return res.status(401).json('You don not have permission !');
-            // }
             if (!roles.some(role => permissions.includes(role))) {
                 return res.status(401).json('You don not have permission !');
             }

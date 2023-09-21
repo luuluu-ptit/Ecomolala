@@ -22,7 +22,7 @@ const unGetSelectData = (select = []) => {
 const removeUndefinedObject = obj => {
     Object.keys(obj).forEach(key => {
         if (obj[key] == null) {
-            delete obj[key]; 2
+            delete obj[key]; 
         }
     })
 

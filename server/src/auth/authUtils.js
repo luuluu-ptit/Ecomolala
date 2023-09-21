@@ -46,20 +46,19 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
             code: "error",
             mess: error.message,
             status: 'error',
-
         }
     }
 }
 
+/*
+1.Check UserId missing
+2.Get access token
+3.verify token
+4.check user in db
+5.check keystore with this userId
+6.OK all -> return next()
+*/
 const authentication = asyncHandler(async (req, res, next) => {
-    /*
-    1.Check UserId missing
-    2.Get access token
-    3.verify token
-    4.check user in db
-    5.check keystore with this userId
-    6.OK all -> return next()
-    */
     try {
         // console.log('AHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHIHI2');
         const userId = req.headers[HEADER.CLIENT_ID];

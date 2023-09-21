@@ -13,6 +13,8 @@ router.post('/shop/login', asyncHandler(AccessController.login));
 
 //authentication
 router.use(authentication);
+router.post('/shop/convertRoleUsertoSeller', asyncHandler(AccessController.convertRoleUsertoSeller));
+router.post('/shop/changePassword', asyncHandler(AccessController.changePassword));
 
 ////////////////////
 router.post('/shop/logout', asyncHandler(AccessController.logout));

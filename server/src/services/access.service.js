@@ -203,7 +203,7 @@ class AccessService {
             const hashPassword = await bcrypt.hash(password, 10);
 
             const newShop = await shopModel.create({
-                name, email, password: hashPassword, roles: [RoleShop.SHOP, RoleShop.USER]
+                name, email, password: hashPassword, roles: [RoleShop.USER]
             })
 
             if (newShop) {
@@ -267,7 +267,71 @@ class AccessService {
         }
     }
 
-    
+    //convertRoleUsertoSeller
+    static convertRoleUsertoSeller = async ({ userId }) => {
+        try {
+            const user = await shopModel.findById(userId);
+            if (!user) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'User not found'
+                }
+            }
+            if (user.roles.includes(RoleShop.SHOP) && !user.roles.includes(RoleShop.ADMIN)) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'User is already a seller'
+                }
+            }
+
+            user.roles.push(RoleShop.SHOP);
+            user.verify = true;
+            user.status = 'active';
+            await user.save();
+
+            return user;
+        } catch (error) {
+            return {
+                code: 'xxxxxx',
+                message: error.message,
+                status: 'error'
+            }
+        }
+    }
+
+    static changePassword = async ({ pairPassword, deCode }) => {
+        try {
+            const { oldPassword, newPassword } = pairPassword
+            // console.log(oldPassword, "XXXXX");
+            const { userId } = deCode;
+            const user = await shopModel.findById(userId);
+            // console.log("XXXXXXXXX:", user);
+            if (user && (await bcrypt.compare(oldPassword, user.password))) {
+                // const salt = await bcrypt.genSalt(10);
+                // const hashPassword = await bcrypt.hash(newPassword, salt);
+                const hashPassword = await bcrypt.hash(newPassword, 10);
+                // console.log(typeof hashPassword, "typeof");
+                user.password = hashPassword;
+                await user.save();
+                return {
+                    code: 'xxxxxx',
+                    message: 'Password changed'
+                }
+            } else {
+                return {
+                    code: 'xxxxxx',
+                    message: 'Invalid old password'
+                }
+            }
+        } catch (error) {
+            return {
+                code: 'xxxxxx',
+                message: error.message,
+                status: 'error'
+            }
+        }
+    };
+
 }
 
 module.exports = AccessService;

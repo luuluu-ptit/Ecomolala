@@ -58,6 +58,31 @@ class AccessController {
             next(error);
         }
     }
+
+    convertRoleUsertoSeller = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Convert role user to seller successfully',
+                metadata: await AccessService.convertRoleUsertoSeller(req.user)
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    changePassword = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Change password successfully',
+                metadata: await AccessService.changePassword({
+                    pairPassword: req.body,
+                    deCode: req.user
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new AccessController();
