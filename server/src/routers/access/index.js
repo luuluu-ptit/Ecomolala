@@ -11,6 +11,10 @@ router.post('/shop/signup', asyncHandler(AccessController.signUp));
 //login
 router.post('/shop/login', asyncHandler(AccessController.login));
 
+router.get('/shop/forgotPassword', asyncHandler(AccessController.forgotPassword));
+router.post('/shop/resetPassword/:token', asyncHandler(AccessController.resetPassword));
+
+
 //authentication
 router.use(authentication);
 router.post('/shop/convertRoleUsertoSeller', asyncHandler(AccessController.convertRoleUsertoSeller));

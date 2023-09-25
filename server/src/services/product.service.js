@@ -65,6 +65,18 @@ class ProductFactory {
     static async findProduct({ product_id }) {
         return await findProduct({ product_id, unselect: ['__v'] });
     }
+
+    static async getProductByCategory({ 
+        limit = 50, 
+        sort = 'ctime', 
+        page = 1, 
+        filter = { isPublished: true, product_type : productType } 
+    }){
+        return await getProductByCategory({
+            limit, sort, page, filter,
+            select: ['product_name', 'product_price', 'product_thumb', 'product_shop']
+        })
+    }
 }
 
 class Product {

@@ -59,6 +59,48 @@ class AccessController {
         }
     }
 
+    forgotPassword = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Forgot password successfully',
+                metadata: await AccessService.forgotPassword({
+                    email: req.query.email
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    resetPassword = async (req, res, next) => {
+        // console.log('reset password XXXXXXXXXXXXXXXXX');
+        try {
+            return res.status(201).json({
+                message: 'Reset password successfully',
+                metadata: await AccessService.resetPassword({
+                    password: req.body.password,
+                    token: req.params.token
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    changePassword = async (req, res, next) => {
+        try {
+            return res.status(201).json({
+                message: 'Change password successfully',
+                metadata: await AccessService.changePassword({
+                    pairPassword: req.body,
+                    deCode: req.user
+                })
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+
     convertRoleUsertoSeller = async (req, res, next) => {
         try {
             return res.status(201).json({
@@ -75,20 +117,6 @@ class AccessController {
             return res.status(201).json({
                 message: 'Convert role user to seller successfully',
                 metadata: await AccessService.cancellationOfSales(req.user)
-            })
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    changePassword = async (req, res, next) => {
-        try {
-            return res.status(201).json({
-                message: 'Change password successfully',
-                metadata: await AccessService.changePassword({
-                    pairPassword: req.body,
-                    deCode: req.user
-                })
             })
         } catch (error) {
             next(error);

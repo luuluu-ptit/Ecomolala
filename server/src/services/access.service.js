@@ -3,7 +3,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const KeyTokenService = require('./keyToken.service');
-const { createTokenPair, verifyJWT } = require('../auth/authUtils');
+const { createTokenPair, verifyJWT, sendMail } = require('../auth/authUtils');
 const shopModel = require('../models/shop.model');
 const { product: productModel } = require('../models/products.model');
 const { getInfoData, removeData } = require('../utils');
@@ -268,6 +268,115 @@ class AccessService {
         }
     }
 
+    static changePassword = async ({ pairPassword, deCode }) => {
+        try {
+            const { oldPassword, newPassword } = pairPassword
+            // console.log(oldPassword, "XXXXX");
+            const { userId } = deCode;
+            const user = await shopModel.findById(userId);
+            // console.log("XXXXXXXXX:", user);
+            if (user && (await bcrypt.compare(oldPassword, user.password))) {
+                // const salt = await bcrypt.genSalt(10);
+                // const hashPassword = await bcrypt.hash(newPassword, salt);
+                const hashPassword = await bcrypt.hash(newPassword, 10);
+                // console.log(typeof hashPassword, "typeof");
+                user.password = hashPassword;
+                await user.save();
+                return {
+                    code: 'xxxxxx',
+                    message: 'Password changed'
+                }
+            } else {
+                return {
+                    code: 'xxxxxx',
+                    message: 'Invalid old password'
+                }
+            }
+        } catch (error) {
+            return {
+                code: 'xxxxxx',
+                message: error.message,
+                status: 'error'
+            }
+        }
+    };
+
+    /*
+    forgot password 
+    // Client gửi email
+    // Server check email có hợp lệ hay không => Gửi mail + kèm theo link (password change token)
+    // Client check mail => click link
+    // Client gửi api kèm token
+    // Check token có giống với token mà server gửi mail hay không
+    // Change password 
+    */
+    static forgotPassword = async ({ email }) => {
+        if (!email) {
+            return {
+                code: 'XXXXX',
+                message: "Missing email"
+            }
+        }
+        // const user = await findByEmail({ email });
+        const user = await shopModel.findOne({ email })
+        // console.log("XXXX", user);
+        if (!user) {
+            return {
+                code: 'XXXXX',
+                message: "User not found"
+            }
+        }
+        const resetToken = user.createPasswordChangedToken();
+        await user.save();
+
+        const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/v1/shop/resetPassword/${resetToken}>Click here</a>`
+
+        const data = {
+            email,
+            html,
+        }
+        const rs = await sendMail(data);
+
+        return {
+            rs,
+            resetToken
+        };
+    }
+
+    static resetPassword = async ({ password, token }) => {
+        // console.log('reset password XXXXXXXXXXXXXXXXX');
+        try {
+            if (!password || !token) {
+                return {
+                    code: 'XXXXX',
+                    message: "Missing imputs"
+                }
+            }
+            const passwordResetToken = crypto.createHash('sha256').update(token).digest('hex')
+            const user = await shopModel.findOne({ passwordResetToken, passwordResetExpires: { $gt: Date.now() } })
+            if (!user) {
+                return {
+                    code: 'XXXXX',
+                    message: "Invalid reset token"
+                }
+            }
+            const hashPassword = await bcrypt.hash(password, 10);
+            user.password = hashPassword;
+            user.passwordResetToken = undefined;
+            user.passwordChangedAt = Date.now();
+            user.passwordResetExpires = undefined;
+            await user.save();
+
+            return user;
+        } catch (error) {
+            return {
+                code: 'xxxxxx',
+                message: error.message,
+                status: 'error'
+            }
+        }
+    }
+
     //convertRoleUsertoSeller
     static convertRoleUsertoSeller = async ({ userId }) => {
         try {
@@ -333,39 +442,6 @@ class AccessService {
         }
     }
 
-    static changePassword = async ({ pairPassword, deCode }) => {
-        try {
-            const { oldPassword, newPassword } = pairPassword
-            // console.log(oldPassword, "XXXXX");
-            const { userId } = deCode;
-            const user = await shopModel.findById(userId);
-            // console.log("XXXXXXXXX:", user);
-            if (user && (await bcrypt.compare(oldPassword, user.password))) {
-                // const salt = await bcrypt.genSalt(10);
-                // const hashPassword = await bcrypt.hash(newPassword, salt);
-                const hashPassword = await bcrypt.hash(newPassword, 10);
-                // console.log(typeof hashPassword, "typeof");
-                user.password = hashPassword;
-                await user.save();
-                return {
-                    code: 'xxxxxx',
-                    message: 'Password changed'
-                }
-            } else {
-                return {
-                    code: 'xxxxxx',
-                    message: 'Invalid old password'
-                }
-            }
-        } catch (error) {
-            return {
-                code: 'xxxxxx',
-                message: error.message,
-                status: 'error'
-            }
-        }
-    };
-
     // api like product list
     static addLikedProduct = async ({ productId, deCode }) => {
         try {
@@ -386,11 +462,17 @@ class AccessService {
                 }
             }
 
-            // console.log("XXXXXX", product.product_shop === userId);
             if (product.product_shop == userId) {
                 return {
                     code: 'xxxxxx',
-                    message: 'San pham nay thuoc ve cua hang cua ban'
+                    message: 'Sản phẩm này thuộc cửa hàng của bạn'
+                }
+            }
+
+            if (product.isPublished == false && product.isDraft == true) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'Có thể sản phẩm chưa được công khai'
                 }
             }
 

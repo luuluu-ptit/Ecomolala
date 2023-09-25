@@ -86,6 +86,26 @@ const findAllProducts = async ({ limit, sort, page, filter, select }) => {
             .select(getSelectData(select))
             .lean();
 
+        // console.log("products:::::", products);
+        return products;
+    } catch (error) {
+        console.log("Error while querying products:", error);
+        throw error;
+    }
+}
+
+const getProductByCategory = async ({ limit, sort, page, filter, select }) => {
+
+    try {
+        const skip = (page - 1) * limit;
+        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 };
+        const products = await product.find(filter)
+            .sort(sortBy)
+            .skip(skip)
+            .limit(limit)
+            .select(getSelectData(select))
+            .lean();
+
         console.log("products:::::", products);
         return products;
     } catch (error) {

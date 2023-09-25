@@ -6,14 +6,14 @@
 
   - Link drive, docs and diagram : https://drive.google.com/drive/folders/1XE3ptsdTh0jDfGNnlLTUivo6YX95n0Me?usp=sharing
 
-- API (Done 28) :
+- API (Done 31) :
 
   <h5>USER/SHOP-ACCESS<h5>
   - Login [PUBLIC] <br>
   - Sign up [PUBLIC]<br>
   - Authentication(middleware,permission) [PUBLIC]<br>
-  - Convert role user to seller [PUBLIC]<br>
-  - Cancellation Of Sales [PUBLIC]<br>
+  - Convert role user to seller [USER]<br>
+  - Cancellation Of Sales [SHOP]<br>
   - Change Password [PUBLIC]<br>
   - Handler RefreshToken [USER,SHOP]<br>
   - Logout  [USER,SHOP]<br>

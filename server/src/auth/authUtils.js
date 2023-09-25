@@ -4,6 +4,7 @@ const JWT = require('jsonwebtoken');
 const asyncHandler = require('../helpers/asyncHandler');
 const { findByUserId } = require('../services/keyToken.service');
 // const KeyTokenService = require('../services/keyToken.service');
+const nodemailer = require('nodemailer');
 
 const HEADER = {
     API_KEY: 'x-api-key',
@@ -131,9 +132,33 @@ const verifyJWT = async (token, keySecret) => {
     return await JWT.verify(token, keySecret);
 }
 
+const sendMail = async ({ email, html }) => {
+    console.log('Sending mail', process.env.EMAIL_NAME)
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: process.env.EMAIL_NAME, // generated ethereal user
+            pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
+        },
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"SanThuongMaiDienTu-ECOMOLALA" <no-relply@ecomolala.ecommerce.com>', // sender address
+        to: email, // list of receivers
+        subject: `Forgot password`, // Subject line
+        html: html, // html body
+    });
+
+    return info
+}
+
 
 module.exports = {
     createTokenPair,
     authentication,
-    verifyJWT
+    verifyJWT,
+    sendMail
 }

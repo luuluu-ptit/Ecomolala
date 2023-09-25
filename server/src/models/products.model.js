@@ -36,13 +36,13 @@ var productSchema = new Schema({
         type: Boolean,
         default: true,
         index: true,
-        select: false
+        // select: false
     },
     isPublished: {
         type: Boolean,
         default: false,
         index: true,
-        select: false
+        // select: false
     }
 }, {
     timestamps: true,

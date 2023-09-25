@@ -1,5 +1,7 @@
 'use strict';
 
+const crypto = require('crypto');
+
 const { model, Schema } = require('mongoose'); // Erase if already required
 
 const DOCUMENT_NAME = 'Shop';
@@ -40,11 +42,29 @@ var shopSchema = new Schema({
             ref: 'Product',
         },
     ],
+    passwordChangedAt: {
+        type: String
+    },
+    passwordResetToken: {
+        type: String
+    },
+    passwordResetExpires: {
+        type: String
+    }
 }, {
     timestamps: true,
     collection: COLLECTION_NAME
 }
 );
+
+shopSchema.methods = {
+    createPasswordChangedToken: function () {
+        const resetToken = crypto.randomBytes(32).toString('hex')
+        this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+        this.passwordResetExpires = Date.now() + 15 * 60 * 1000
+        return resetToken
+    }
+}
 
 //Export the model
 module.exports = model(DOCUMENT_NAME, shopSchema);
