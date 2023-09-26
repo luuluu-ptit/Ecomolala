@@ -16,8 +16,16 @@ var shopSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true,
+        required: true,
         trim: true,
+        unique: true,
+        validate: {
+            validator: function (v) {
+                // Regular expression for email validation
+                return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(v);
+            },
+            message: props => `${props.value} is not a valid email!`
+        }
     },
     password: {
         type: String,

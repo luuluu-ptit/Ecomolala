@@ -75,14 +75,14 @@ class discountService {
         const foundDiscount = await discountModel.findOne({
             _id: convertToObjectIdMongoDb(discount_id),
             discount_shopId: convertToObjectIdMongoDb(shopId),
-        }).lean();
+        });
 
-        console.log(foundDiscount, "XXXYYY");
+        // console.log(foundDiscount, "XXXYYY");
         if (!foundDiscount) {
             throw new Error('Discount not exists');
         }
 
-        const newDiscount = await discountModel.updateOne({
+        const newDiscount = await foundDiscount.updateOne({
             discount_name: name,
             discount_description: description,
             discount_type: type, //percentage

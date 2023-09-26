@@ -2,15 +2,18 @@
 
 - Detail project report :
 
-  - Link postman : https://app.getpostman.com/join-team?invite_code=1f5e27c19afda1939f3734e46bfbedb6&target_code=8761e71f9f5769219cc7ef901e3bc539
+  - Link postman : https://app.getpostman.com/join-team?
+    invite_code=1f5e27c19afda1939f3734e46bfbedb6&target_code=8761e71f9f5769219cc7ef901e3bc539
 
   - Link drive, docs and diagram : https://drive.google.com/drive/folders/1XE3ptsdTh0jDfGNnlLTUivo6YX95n0Me?usp=sharing
 
-- API (Done 31) :
+- API (Done 33) :
 
   <h5>USER/SHOP-ACCESS<h5>
   - Login [PUBLIC] <br>
   - Sign up [PUBLIC]<br>
+  - Forgot Password (with gmail) [PUBLIC]<br>
+  - Reset Password [PUBLIC]<br>
   - Authentication(middleware,permission) [PUBLIC]<br>
   - Convert role user to seller [USER]<br>
   - Cancellation Of Sales [SHOP]<br>
@@ -46,11 +49,14 @@
 - Curently being researched and developed :
 
   - Xử lý hướng tiếp cận cho quản lý đơn hàng và hàng tồn kho
-  - Thanh toán, vận chuyển
+  - Thanh toán, vận chuyển, hệ thống chat
   - FrontEnd
 
-- Config :
+- Start development:
 
+  - npm run build
+
+- Config :
   - Installation for server : ...
   - Installation for client : ...
   - concurrently : npm install --save-dev concurrently

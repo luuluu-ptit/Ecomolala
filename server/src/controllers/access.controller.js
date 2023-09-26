@@ -48,8 +48,8 @@ class AccessController {
     }
 
     signUp = async (req, res, next) => {
+        console.log(`[P]::signUp::`, req.body);
         try {
-            // console.log(`[P]::signUp::`, req.body);
             return res.status(201).json({
                 message: 'Register successfully',
                 metadata: await AccessService.signUp(req.body)
@@ -123,19 +123,6 @@ class AccessController {
         }
     }
 
-    addLikedProduct = async (req, res, next) => {
-        try {
-            return res.status(201).json({
-                message: 'Change password successfully',
-                metadata: await AccessService.addLikedProduct({
-                    productId: req.params.id,
-                    deCode: req.user
-                })
-            })
-        } catch (error) {
-            next(error);
-        }
-    }
 }
 
 module.exports = new AccessController();
