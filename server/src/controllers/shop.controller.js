@@ -19,6 +19,7 @@ class ShopController {
     }
 
     updateInformationAccessOfUser = async (req, res, next) => {
+        console.log(`[P]::updateInformationAccessOfUser::`, req.body);
         try {
             return res.status(201).json({
                 message: 'Update information access of user successfully',

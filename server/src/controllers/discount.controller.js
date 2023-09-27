@@ -111,6 +111,7 @@ class DiscountController {
             next(error);
         }
     }
+
 }
 
 module.exports = new DiscountController();

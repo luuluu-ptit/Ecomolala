@@ -58,19 +58,18 @@ class shopService {
         try {
             const { name, email, userId } = payload;
             const userMail = await shopModel.findOne({ email }).lean();
-            // console.log(userMail, "userMail - Update Information Access");
+            if (userMail) {
+                return {
+                    code: 'xxxxxx',
+                    message: 'Email already in use',
+                }
+            }
+
             const user = await shopModel.findById(userId);
             if (!user) {
                 return {
                     code: 'xxxxxx',
                     message: 'Shop not found',
-                }
-            }
-
-            if (email && email === userMail.email) {
-                return {
-                    code: 'xxxxxx',
-                    message: 'Email already in use',
                 }
             }
 
