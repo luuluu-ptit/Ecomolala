@@ -20,8 +20,9 @@
   - Change Password [PUBLIC]<br>
   - Handler RefreshToken [USER,SHOP]<br>
   - Logout  [USER,SHOP]<br>
-  - Tokens [USER,SHOP]<br>
+  <!-- - Tokens [USER,SHOP]<br> -->
   - Add Liked Product [USER,SHOP]<br>
+  - Update information access of user [USER,SHOP]<br>
   <h5>PRODUCT<h5>
   - Get List Search Product [PUBLIC]<br>
   - Find All Products [PUBLIC]<br>
@@ -45,6 +46,9 @@
   - Update Discount Service [SHOP]<br>
   - Get All Discount By Shop [SHOP]<br>
   - Delete Discount [SHOP]<br>
+
+- FrontEnd :
+  - Login, sign up and log out <br>
 
 - Curently being researched and developed :
 

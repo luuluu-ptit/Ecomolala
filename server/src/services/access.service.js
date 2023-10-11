@@ -27,14 +27,14 @@ class AccessService {
             if (keyStore.refreshTokensUsed.includes(refreshToken)) {
                 await KeyTokenService.deleteKeyById(userId);
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Something wrong! Pls relogin to continute...'
                 }
             }
 
             if (keyStore.refreshToken !== refreshToken) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Shop not registed'
                 }
             }
@@ -43,7 +43,7 @@ class AccessService {
             const foundShop = findByEmail(email);
             if (!foundShop) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Shop not registed 2'
                 }
             }
@@ -83,7 +83,7 @@ class AccessService {
     //             await KeyTokenService.deleteKeyById(userId);
 
     //             return {
-    //                 code: 'xxxxxx',
+    //                 code: 409,
     //                 message: 'Something wrong! Pls relogin to continute...'
     //             }
     //         }
@@ -93,7 +93,7 @@ class AccessService {
     //         console.log(holderToken, 'holderToken');
     //         if (!holderToken) {
     //             return {
-    //                 code: 'xxxxxx',
+    //                 code: 409,
     //                 message: 'Shop not registed'
     //             }
     //         }
@@ -105,7 +105,7 @@ class AccessService {
     //         const foundShop = findByEmail(email);
     //         if (!foundShop) {
     //             return {
-    //                 code: 'xxxxxx',
+    //                 code: 409,
     //                 message: 'Shop not registed'
     //             }
     //         }
@@ -136,7 +136,11 @@ class AccessService {
         try {
             const delKey = await removeKeyById(keyStore._id);
             console.log('delKey', delKey);
-            return delKey;
+            return {
+                code: 200,
+                metadata: delKey,
+                message: 'Logout successfully'
+            }
         } catch (error) {
             throw error;
         }
@@ -154,7 +158,7 @@ class AccessService {
             const foundShop = await findByEmail({ email });
             if (!foundShop) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Shop not registered'
                 }
             }
@@ -162,7 +166,7 @@ class AccessService {
             const match = bcrypt.compare(password, foundShop.password);
             if (!match) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Authenticated error'
                 }
             }
@@ -182,9 +186,13 @@ class AccessService {
             });
 
             return {
-                shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: foundShop }),
-                tokens
+                code: 200,
+                metadata: {
+                    shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: foundShop }),
+                    tokens
+                }
             }
+
         } catch (error) {
             throw error
         }
@@ -197,9 +205,9 @@ class AccessService {
 
             if (holderShop) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Shop already registered'
-                }
+                };
             }
 
             const hashPassword = await bcrypt.hash(password, 10);
@@ -236,9 +244,9 @@ class AccessService {
 
                 if (!keyStore) {
                     return {
-                        code: 'xxxxxx',
+                        code: 409,
                         message: 'keyStore error'
-                    }
+                    };
                 }
 
                 // const publicKeyObject = crypto.createPublicKey(publicKeyString);
@@ -248,7 +256,7 @@ class AccessService {
                 // console.log(`Created token success`, tokens);
 
                 return {
-                    code: 201,
+                    code: 200,
                     metadata: {
                         shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: newShop }),
                         tokens
@@ -256,16 +264,12 @@ class AccessService {
                 }
             }
             return {
-                code: 200,
+                code: 403,
                 metadata: null
             }
 
         } catch (error) {
-            return {
-                code: 'xxxxxx',
-                message: error.message,
-                status: 'error'
-            }
+            throw (error);
         }
     }
 
@@ -284,21 +288,17 @@ class AccessService {
                 user.password = hashPassword;
                 await user.save();
                 return {
-                    code: 'xxxxxx',
+                    code: 201,
                     message: 'Password changed'
                 }
             } else {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Invalid old password'
                 }
             }
         } catch (error) {
-            return {
-                code: 'xxxxxx',
-                message: error.message,
-                status: 'error'
-            }
+            throw (error);
         }
     };
 
@@ -312,36 +312,47 @@ class AccessService {
     // Change password 
     */
     static forgotPassword = async ({ email }) => {
-        if (!email) {
-            return {
-                code: 'XXXXX',
-                message: "Missing email"
+        try {
+            if (!email) {
+                return {
+                    code: 'XXXXX',
+                    message: "Missing email"
+                }
             }
-        }
-        // const user = await findByEmail({ email });
-        const user = await shopModel.findOne({ email })
-        // console.log("XXXX", user);
-        if (!user) {
-            return {
-                code: 'XXXXX',
-                message: "User not found"
+            // const user = await findByEmail({ email });
+            const user = await shopModel.findOne({ email })
+            // console.log("XXXX", user);
+            if (!user) {
+                return {
+                    code: 'XXXXX',
+                    message: "User not found"
+                }
             }
+            const resetToken = user.createPasswordChangedToken();
+            await user.save();
+
+            const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/v1/shop/resetPassword/${resetToken}>Click here</a>`
+
+            const data = {
+                email,
+                html,
+            }
+            const rs = await sendMail(data);
+
+            // return {
+            //     rs,
+            //     resetToken
+            // };
+            return {
+                code: 200,
+                metadata: {
+                    rs,
+                    resetToken
+                }
+            }
+        } catch (error) {
+            throw (error);
         }
-        const resetToken = user.createPasswordChangedToken();
-        await user.save();
-
-        const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/v1/shop/resetPassword/${resetToken}>Click here</a>`
-
-        const data = {
-            email,
-            html,
-        }
-        const rs = await sendMail(data);
-
-        return {
-            rs,
-            resetToken
-        };
     }
 
     static resetPassword = async ({ password, token }) => {
@@ -349,7 +360,7 @@ class AccessService {
         try {
             if (!password || !token) {
                 return {
-                    code: 'XXXXX',
+                    code: 409,
                     message: "Missing imputs"
                 }
             }
@@ -357,7 +368,7 @@ class AccessService {
             const user = await shopModel.findOne({ passwordResetToken, passwordResetExpires: { $gt: Date.now() } })
             if (!user) {
                 return {
-                    code: 'XXXXX',
+                    code: 409,
                     message: "Invalid reset token"
                 }
             }
@@ -368,13 +379,16 @@ class AccessService {
             user.passwordResetExpires = undefined;
             await user.save();
 
-            return user;
-        } catch (error) {
+            // return user;
             return {
-                code: 'xxxxxx',
-                message: error.message,
-                status: 'error'
+                code: 200,
+                metadata: {
+                    user
+                }
             }
+
+        } catch (error) {
+            throw (error);
         }
     }
 
@@ -384,13 +398,13 @@ class AccessService {
             const user = await shopModel.findById(userId);
             if (!user) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'User not found'
                 }
             }
             if (user.roles.includes(RoleShop.SHOP) && !user.roles.includes(RoleShop.ADMIN)) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'User is already a seller'
                 }
             }
@@ -400,13 +414,15 @@ class AccessService {
             user.status = 'active';
             await user.save();
 
-            return user;
-        } catch (error) {
+            // return user;
             return {
-                code: 'xxxxxx',
-                message: error.message,
-                status: 'error'
+                code: 200,
+                metadata: {
+                    user
+                }
             }
+        } catch (error) {
+            throw (error);
         }
     }
 
@@ -415,13 +431,13 @@ class AccessService {
             const user = await shopModel.findById(userId);
             if (!user) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'User not found'
                 }
             }
             if (!user.roles.includes(RoleShop.SHOP) && !user.roles.includes(RoleShop.ADMIN)) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'User is not yet a seller'
                 }
             }
@@ -433,13 +449,15 @@ class AccessService {
             user.status = 'inactive';
             await user.save();
 
-            return user;
-        } catch (error) {
+            // return user;
             return {
-                code: 'xxxxxx',
-                message: error.message,
-                status: 'error'
+                code: 200,
+                metadata: {
+                    user
+                }
             }
+        } catch (error) {
+            throw (error);
         }
     }
 

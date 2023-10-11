@@ -1,46 +1,101 @@
-import "./login.css";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { loginUser } from "../../store/apiRequest";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
+import { Box, TextField, Button, Alert, CircularProgress } from "@mui/material";
+import { isEmail } from "validator";
+import AuthAction from "../../store/actions/auth.action";
 
 const Login = () => {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  let navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+
+  const dispatch = useDispatch();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const newUser = {
-      name: name,
-      password: password,
-    };
-    loginUser(newUser, dispatch, navigate);
+
+    setLoading(true);
+
+    if (!email || !isEmail(email) || !password) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await dispatch(AuthAction.login(email, password));
+      navigate("/profile");
+      window.location.reload();
+    } catch (error) {
+      setLoading(false);
+    }
+    // console.log(loading, "loadingloading");
   };
+
+  if (isLoggedIn) {
+    return <Navigate to="/profile" />;
+  }
+
   return (
-    <section className="login-container">
-      <div className="login-title"> Log in</div>
-      <form onSubmit={handleLogin}>
-        <label>YOUR NAME</label>
-        <input
-          type="text"
-          placeholder="Enter your username"
-          onChange={(e) => setName(e.target.value)}
-        />
-        <label>PASSWORD</label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit"> Continue </button>
-      </form>
-      <div className="login-register"> Don't have an account yet? </div>
-      <Link className="login-register-link" to="/register">
-        Register one for free{" "}
-      </Link>
-    </section>
+    <Box className="col-md-12">
+      <Box className="card card-container">
+        <form onSubmit={handleLogin}>
+          <Box className="form-group">
+            <TextField
+              type="text"
+              className="form-control"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={!email || !isEmail(email)}
+              helperText={
+                !email
+                  ? "This field is required!"
+                  : !isEmail(email)
+                  ? "This is not a valid email."
+                  : null
+              }
+              label="Email"
+            />
+          </Box>
+
+          <Box className="form-group">
+            <TextField
+              type="password"
+              className="form-control"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={!password}
+              helperText={!password ? "This field is required!" : null}
+              label="Password"
+            />
+          </Box>
+
+          <Box className="form-group">
+            <Button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={loading}
+            >
+              {loading && <CircularProgress size={24} />}
+              <span>Login</span>
+            </Button>
+          </Box>
+
+          {message && (
+            <Box className="form-group">
+              <Alert severity="error">{message}</Alert>
+            </Box>
+          )}
+        </form>
+      </Box>
+    </Box>
   );
 };
 

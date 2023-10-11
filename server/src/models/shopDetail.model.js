@@ -20,6 +20,7 @@ const shopDetailSchema = new Schema({
         index: true
     },
     address: {
+        address: String,
         street: String,
         city: String,
         district: String,

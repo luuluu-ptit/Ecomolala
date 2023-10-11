@@ -1,12 +1,25 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Login from "./pages/Login/Login"
 import Register from './pages/Register.js/Register';
-import NavBar from './components/Navbar/Navbar';
+import NavBar from './components/Navbar';
 import HomePage from './pages/Home/Home';
-import Footer from './components/Footer/Footer';
+import Footer from './components/Footer';
+// import { clearMessage } from "./store/actions/message.action";
 
 function App() {
+
+  // const dispatch = useDispatch();
+  // let location = useLocation();
+
+  // useEffect(() => {
+  //   if (["/login", "/register"].includes(location.pathname)) {
+  //     dispatch(clearMessage()); // clear message when changing location
+  //   }
+  // }, [dispatch, location]);
+
   return (
     <Router>
       <NavBar />

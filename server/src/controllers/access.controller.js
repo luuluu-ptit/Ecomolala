@@ -5,121 +5,156 @@ const AccessService = require("../services/access.service");
 class AccessController {
 
     handlerRefreshToken = async (req, res, next) => {
-        try {
-            return res.status(201).json({
-                message: 'Created token pair successfully',
-                metadata: await AccessService.handlerRefreshToken({
-                    keyStore: req.keyStore,
-                    user: req.user,
-                    refreshToken: req.refreshToken,
-                })
-            })
 
-            // return res.status(201).json({
-            //     message: 'Created token pair successfully',
-            //     metadata: await AccessService.handlerRefreshToken(req.body.refreshToken)
-            // })
+        try {
+            const result = await AccessService.handlerRefreshToken({
+                keyStore: req.keyStore,
+                user: req.user,
+                refreshToken: req.refreshToken,
+            })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Created token pair successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     logout = async (req, res, next) => {
         try {
-            return res.status(201).json({
-                message: 'Logout successfully',
-                metadata: await AccessService.logout(req.keyStore)
+            const result = await AccessService.logout(req.keyStore)
+            return res.status(result.code).json({
+                message: !result.code === 200 ? 'Logout fail' : result.message,
+                metadata: result.metadata
             })
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     login = async (req, res, next) => {
+
         try {
-            // console.log(`[P]::login::`, req.body);
-            return res.status(201).json({
-                message: 'Login successfully',
-                metadata: await AccessService.login(req.body)
-            })
+            const result = await AccessService.login(req.body)
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Login Successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     signUp = async (req, res, next) => {
         console.log(`[P]::signUp::`, req.body);
         try {
-            return res.status(201).json({
-                message: 'Register successfully',
-                metadata: await AccessService.signUp(req.body)
-            })
+            const result = await AccessService.signUp(req.body)
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Register successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     forgotPassword = async (req, res, next) => {
         try {
-            return res.status(201).json({
-                message: 'Forgot password successfully',
-                metadata: await AccessService.forgotPassword({
-                    email: req.query.email
-                })
+            const result = await AccessService.forgotPassword({
+                email: req.query.email
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Forgot password successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     resetPassword = async (req, res, next) => {
         // console.log('reset password XXXXXXXXXXXXXXXXX');
         try {
-            return res.status(201).json({
-                message: 'Reset password successfully',
-                metadata: await AccessService.resetPassword({
-                    password: req.body.password,
-                    token: req.params.token
-                })
+            const result = await AccessService.resetPassword({
+                password: req.body.password,
+                token: req.params.token
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Reset password successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     changePassword = async (req, res, next) => {
+
         try {
-            return res.status(201).json({
-                message: 'Change password successfully',
-                metadata: await AccessService.changePassword({
-                    pairPassword: req.body,
-                    deCode: req.user
-                })
+            const result = await AccessService.changePassword({
+                pairPassword: req.body,
+                deCode: req.user
             })
+            return res.status(result.code).json({
+                message: result.code === 201 ? 'Change password successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     convertRoleUsertoSeller = async (req, res, next) => {
+
         try {
-            return res.status(201).json({
-                message: 'Convert role user to seller successfully',
-                metadata: await AccessService.convertRoleUsertoSeller(req.user)
-            })
+            const result = await AccessService.convertRoleUsertoSeller(req.user)
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Convert role user to seller successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     cancellationOfSales = async (req, res, next) => {
+
         try {
-            return res.status(201).json({
-                message: 'Convert role user to seller successfully',
-                metadata: await AccessService.cancellationOfSales(req.user)
-            })
+            const result = await AccessService.cancellationOfSales(req.user)
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Cancellation Of Sales Successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
