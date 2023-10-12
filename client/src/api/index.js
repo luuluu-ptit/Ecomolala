@@ -13,26 +13,46 @@ import { authHeader, userHeader } from "./auth-header";
 const API_KEY = "b14f9365f51b86d8a271b929d12a5a157f8ef333ab2fd56e81285a274ee53f46543bf6009efc460f620aa5d913be1b3f074f4aa58db6eac0d2cf0fa263b596aa";
 const USER_ID = userHeader().clientId;
 const AUTHORIZATION = authHeader().authorization;
-// const REFRESHTOKEN = authHeader().authorization;REFRESHTOKEN: 'x-rtoken-id',
-
+// const REFRESHTOKEN = authHeader().authorization; 
+// 'x-rtoken-id'
 
 const API = axios.create({ baseURL: `http://localhost:5000/api/v1` });
 
 //ACCESS
 const login = async (formData) => {
-    // console.log(process.env.API_KEY, "process.env.API_KEY");
+
     try {
-        const response = await API.post('/shop/login', formData, { headers: { "x-api-key": API_KEY } });
+        const response = await API.post('/shop/login', formData, {
+            headers: {
+                "x-api-key": API_KEY
+            }
+        });
         // console.log(response.data, "XXXXX");
         return response;
     } catch (error) {
         console.error(error);
-        throw error;
+        // throw error;
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
     }
 };
 const register = async (formData) => {
     try {
-        return await API.post('/shop/signup', formData, { headers: { "x-api-key": API_KEY } });
+        const response = await API.post('/shop/signup', formData, {
+            headers: {
+                "x-api-key": API_KEY
+            }
+        });
+        return response;
     } catch (error) {
         console.error(error);
         if (error.response) {
@@ -48,19 +68,25 @@ const register = async (formData) => {
         }
     }
 }
-const forgotPassword = (formData) => API.post('/shop/forgotPassword', formData, { headers: { "x-api-key": process.env.API_KEY } });
-const resetPassword = (formData) => API.post('/shop/resetPassword/:token', formData, { headers: { "x-api-key": process.env.API_KEY } });
+const forgotPassword = (formData) => API.post('/shop/forgotPassword', formData, { headers: { "x-api-key": API_KEY } });
+const resetPassword = (formData) => API.post('/shop/resetPassword/:token', formData, { headers: { "x-api-key": API_KEY } });
 
 const logout = async () => {
+    console.log({
+        API_KEY,
+        USER_ID,
+        AUTHORIZATION
+    })
 
     try {
-        return await API.post('/shop/logout', {
+        const response = await API.post('/shop/logout', {}, {
             headers: {
                 "x-api-key": API_KEY,
                 "x-client-id": USER_ID,
                 "authorization": AUTHORIZATION
             }
         });
+        return response;
     } catch (error) {
         // throw error;
         console.error(error);

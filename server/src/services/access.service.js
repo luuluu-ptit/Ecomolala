@@ -61,8 +61,11 @@ class AccessService {
             });
 
             return {
-                user,
-                tokens
+                code: 200,
+                metadata: {
+                    user,
+                    tokens
+                }
             }
 
         } catch (error) {
@@ -133,7 +136,9 @@ class AccessService {
     // }
 
     static logout = async (keyStore) => {
+        console.log('delKeyXXXX1');
         try {
+            console.log('delKeyXXXX2');
             const delKey = await removeKeyById(keyStore._id);
             console.log('delKey', delKey);
             return {
@@ -245,7 +250,7 @@ class AccessService {
                 if (!keyStore) {
                     return {
                         code: 409,
-                        message: 'keyStore error'
+                        message: 'keyStore not found'
                     };
                 }
 
@@ -265,7 +270,7 @@ class AccessService {
             }
             return {
                 code: 403,
-                metadata: null
+                message: 'signUp failed'
             }
 
         } catch (error) {

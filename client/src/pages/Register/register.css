@@ -1,0 +1,23 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+}
+
+.card {
+    margin: auto;
+    background-color: rgb(48, 105, 170);
+}
+
+.form-group-register{
+    margin: 50px;
+}
+
+.form-register-item{
+    margin: 10px 0  10px 0;
+}
+
+.header-register{
+    margin-left: 15px;
+}

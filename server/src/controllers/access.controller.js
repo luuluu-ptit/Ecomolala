@@ -71,6 +71,25 @@ class AccessController {
         }
     }
 
+    changePassword = async (req, res, next) => {
+
+        try {
+            const result = await AccessService.changePassword({
+                pairPassword: req.body,
+                deCode: req.user
+            })
+            return res.status(result.code).json({
+                message: result.message,
+                metadata: result.metadata
+            });
+        } catch (error) {
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
+        }
+    }
+
     forgotPassword = async (req, res, next) => {
         try {
             const result = await AccessService.forgotPassword({
@@ -97,25 +116,6 @@ class AccessController {
             })
             return res.status(result.code).json({
                 message: result.code === 200 ? 'Reset password successfully' : result.message,
-                metadata: result.metadata
-            });
-        } catch (error) {
-            return res.status(error.code).json({
-                message: error.message,
-                status: error.status
-            });
-        }
-    }
-
-    changePassword = async (req, res, next) => {
-
-        try {
-            const result = await AccessService.changePassword({
-                pairPassword: req.body,
-                deCode: req.user
-            })
-            return res.status(result.code).json({
-                message: result.code === 201 ? 'Change password successfully' : result.message,
                 metadata: result.metadata
             });
         } catch (error) {
