@@ -17,7 +17,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -32,7 +32,7 @@ class AccessController {
                 metadata: result.metadata
             })
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -48,7 +48,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -64,7 +64,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -83,7 +83,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -100,7 +100,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -119,7 +119,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -135,7 +135,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });
@@ -151,7 +151,7 @@ class AccessController {
                 metadata: result.metadata
             });
         } catch (error) {
-            return res.status(error.code).json({
+            return res.status(error.code || 500).json({
                 message: error.message,
                 status: error.status
             });

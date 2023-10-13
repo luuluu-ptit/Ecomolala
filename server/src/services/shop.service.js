@@ -8,30 +8,32 @@ class shopService {
             const { userId } = deCode;
             const user = await shopModel.findById(userId);
             const product = await productModel.findById(productId);
+            console.log("addLikedProductXXX1")
+
             if (!user) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'User not found'
                 }
             }
 
             if (user.likedProduct.includes(productId)) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Product already liked'
                 }
             }
 
             if (product.product_shop == userId) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Sản phẩm này thuộc cửa hàng của bạn'
                 }
             }
 
             if (product.isPublished == false && product.isDraft == true) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Có thể sản phẩm chưa được công khai'
                 }
             }
@@ -39,16 +41,37 @@ class shopService {
             user.likedProduct.push(productId);
             await user.save();
             return {
-                code: 'xxxxxx',
-                message: 'Product added to liked list'
+                code: 200,
+                metadata: user
             }
 
         } catch (error) {
-            return {
-                code: 'xxxxxx',
-                message: error.message,
-                status: 'error'
+            throw error;
+        }
+    };
+
+    static getLikedProducts = async ({ deCode }) => {
+        try {
+            const { userId } = deCode;
+            // const user = await shopModel.findById(userId);
+            const user = await shopModel.findById(userId).populate('likedProduct');
+            if (!user) {
+                return {
+                    code: 404,
+                    message: 'User not found'
+                }
             }
+
+            // Populate the likedProduct field to get the product details
+            // await user.populate('likedProduct').execPopulate();
+
+            return {
+                code: 200,
+                metadata: user.likedProduct
+            }
+
+        } catch (error) {
+            throw error;
         }
     };
 
@@ -60,7 +83,7 @@ class shopService {
             const userMail = await shopModel.findOne({ email }).lean();
             if (userMail) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Email already in use',
                 }
             }
@@ -68,14 +91,14 @@ class shopService {
             const user = await shopModel.findById(userId);
             if (!user) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Shop not found',
                 }
             }
 
             if (name && name === user.name) {
                 return {
-                    code: 'xxxxxx',
+                    code: 409,
                     message: 'Name already in use',
                 }
             }
@@ -85,10 +108,13 @@ class shopService {
                 email: email
             });
 
-            return newUser;
+            return {
+                code: 200,
+                metadata: newUser
+            };
 
         } catch (error) {
-            throw new Error
+            throw error;
         }
     }
 

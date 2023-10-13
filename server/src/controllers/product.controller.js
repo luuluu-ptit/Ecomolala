@@ -37,56 +37,72 @@ class ProductController {
     // PUT: publish product
     publishProductByShop = async (req, res, next) => {
         try {
-            return res.status(200).json({
-                message: 'Publish product by Shop successfully',
-                metadata: await ProductService.publishProductByShop({
-                    product_shop: req.user.userId,
-                    product_id: req.params.id,
-                })
+            const result = await ProductService.publishProductByShop({
+                product_shop: req.user.userId,
+                product_id: req.params.id,
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Publish product by Shop successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     unPublishProductByShop = async (req, res, next) => {
         try {
-            return res.status(200).json({
-                message: 'UnPublish product by Shop successfully',
-                metadata: await ProductService.unPublishProductByShop({
-                    product_shop: req.user.userId,
-                    product_id: req.params.id,
-                })
+            const result = await ProductService.unPublishProductByShop({
+                product_shop: req.user.userId,
+                product_id: req.params.id,
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'UnPublish product by Shop successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     //QUERY
     getAllDraftsForShop = async (req, res, next) => {
         try {
-            return res.status(200).json({
-                message: 'Get list draft product successfully',
-                metadata: await ProductService.findAllDraftsForShop({
-                    product_shop: req.user.userId
-                })
+            const result = await ProductService.findAllDraftsForShop({
+                product_shop: req.user.userId
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Get list draft product successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     getAllPublishForShop = async (req, res, next) => {
         try {
-            return res.status(200).json({
-                message: 'Get list publish product successfully',
-                metadata: await ProductService.findAllPublishForShop({
-                    product_shop: req.user.userId
-                })
+            const result = await ProductService.findAllPublishForShop({
+                product_shop: req.user.userId
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Get list publish product successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
@@ -94,38 +110,50 @@ class ProductController {
     getListSearchProduct = async (req, res, next) => {
         try {
             // console.log(req.params, "req.paramsreq.params");
-            return res.status(200).json({
-                message: 'Get list search product successfully',
-                metadata: await ProductService.searchProduct({
-                    keySearch: req.params
-                })
+            const result = await ProductService.searchProduct({
+                keySearch: req.params
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Get list search product successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     findAllProducts = async (req, res, next) => {
         try {
-            return res.status(200).json({
-                message: 'Get all Products product successfully',
-                metadata: await ProductService.findAllProducts(req.query)
-            })
+            const result = await ProductService.findAllProducts(req.query)
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Get all Products product successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 
     findProduct = async (req, res, next) => {
         try {
-            return res.status(200).json({
-                message: 'Get product successfully',
-                metadata: await ProductService.findProduct({
-                    product_id: req.params.product_id
-                })
+            const result = await ProductService.findProduct({
+                product_id: req.params.product_id
             })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Get product successfully' : result.message,
+                metadata: result.metadata
+            });
         } catch (error) {
-            next(error);
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
         }
     }
 }

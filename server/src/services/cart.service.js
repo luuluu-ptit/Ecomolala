@@ -12,57 +12,95 @@ const { getProductById } = require("../models/repositories/product.repo");
 
 class cartService {
 
-    //START REPO CART
     static async createUserCart({ userId, product }) {
-        const query = {
-            cart_userId: userId,
-            cart_state: 'active',
-        }, updateOrInsert = {
-            $addToSet: {
-                cart_products: product
+        try {
+            const query = {
+                cart_userId: userId,
+                cart_state: 'active',
+            }, updateOrInsert = {
+                $addToSet: {
+                    cart_products: product
+                }
+            }, options = { upsert: true, new: true }
+
+            // return await cart.findOneAndUpdate(query, updateOrInsert, options);
+            return {
+                code: 200,
+                metadata: await cart.findOneAndUpdate(query, updateOrInsert, options)
             }
-        }, options = { upsert: true, new: true }
+        } catch (error) {
+            throw error;
+        }
+    }
 
-        return await cart.findOneAndUpdate(query, updateOrInsert, options);
-    } //END REPO CART
-
-    //START UPDATE REPO CART
     static async updateUserCartquantity({ userId, product }) {
-        const { productId, quantity } = product;
-        const query = {
-            cart_userId: userId,
-            'cart_products.productId': productId,
-            cart_state: 'active',
-        }, updateSet = {
-            $inc: {
-                'cart_products.$.quantity': quantity
-            }
-        }, options = { upsert: true, new: true }
+        try {
+            const { productId, quantity } = product;
+            const query = {
+                cart_userId: userId,
+                'cart_products.productId': productId,
+                cart_state: 'active',
+            }, updateSet = {
+                $inc: {
+                    'cart_products.$.quantity': quantity
+                }
+            }, options = { upsert: true, new: true }
 
-        return await cart.findOneAndUpdate(query, updateSet, options);
-    } //END UPDATE REPO CART
+            // return await cart.findOneAndUpdate(query, updateSet, options);
+            return {
+                code: 200,
+                metadata: await cart.findOneAndUpdate(query, updateSet, options)
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 
 
     // add product to cart [USER]
     static async addProductToCart({ userId, product = {} }) {
-        //check cart ton tai khong ?
-        const userCart = await cart.findOne({
-            cart_userId: userId,
-        });
+        try {
+            //check cart ton tai khong ?
+            const userCart = await cart.findOne({
+                cart_userId: userId,
+            });
 
-        if (!userCart) {
-            //create new cart for user
-            return await cartService.createUserCart({ userId, product });
+            if (!userCart) {
+                //create new cart for user
+                return await cartService.createUserCart({ userId, product });
+            }
+
+            // neu ton tai cart nhung cart rong 
+            if (!userCart.cart_products.length) {
+                userCart.cart_products = [product];
+                // return await userCart.save();
+                return {
+                    code: 200,
+                    metadata: await userCart.save()
+                }
+            }
+
+            //neu ton tai cart va co sp nay thi update quantity
+            // return await cartService.updateUserCartquantity({ userId, product });
+            // Check if the product already exists in the cart
+            const existingProduct = userCart.cart_products.find(
+                (cartProduct) => cartProduct.productId === product.productId
+            );
+
+            if (existingProduct) {
+                // If the product already exists, update the quantity
+                return await cartService.updateUserCartQuantity({ userId, product });
+            } else {
+                // If the product does not exist, add it to the cart
+                userCart.cart_products.push(product);
+                return {
+                    code: 200,
+                    metadata: await userCart.save(),
+                };
+            }
+        } catch (error) {
+            throw error;
         }
-
-        // neu ton tai cart nhung cart rong 
-        if (!userCart.cart_products.length) {
-            userCart.cart_products = [product];
-            return await userCart.save();
-        }
-
-        //neu ton tai cart va co sp nay thi update quantity
-        return await cartService.updateUserCartquantity({ userId, product });
     }
 
     // reduce product quantity by one [USER]
@@ -87,50 +125,85 @@ class cartService {
                 ...other
             ]
         */
-        const { productId, quantity, old_quantity } = shop_order_ids[0]?.item_products[0];
-        //check product
-        const foundProduct = await getProductById(productId);
-        if (!foundProduct) throw new Error(`Product ${productId} not found`);
-        //compare
-        if (foundProduct.product_shop.toString() != shop_order_ids[0]?.shopId) {
-            throw new Error(`Product do not belong to the shop`);
-        }
-        if (quantity === 0) {
-            //delete product
-            return await cartService.deletItemCart({ userId, productId })
-        }
-
-        return await cartService.updateUserCartquantity({
-            userId,
-            product: {
-                productId,
-                quantity: quantity - old_quantity,
+        try {
+            const { productId, quantity, old_quantity } = shop_order_ids[0]?.item_products[0];
+            //check product
+            const foundProduct = await getProductById(productId);
+            if (!foundProduct) {
+                return {
+                    code: 409,
+                    message: `Product ${productId} not found`
+                }
             }
-        })
+            //compare
+            if (foundProduct.product_shop.toString() != shop_order_ids[0]?.shopId) {
+                return {
+                    code: 409,
+                    message: `Product do not belong to the shop`
+                }
+            }
+            if (quantity === 0) {
+                //delete product
+                return await cartService.deletItemCart({ userId, productId })
+            }
+
+            return await cartService.updateUserCartquantity({
+                userId,
+                product: {
+                    productId,
+                    quantity: quantity - old_quantity,
+                }
+            })
+        } catch (error) {
+            throw error;
+        }
     }
 
     // delete item cart [USER]
     static async deletItemCart({ userId, productId }) {
-        const query = {
-            cart_userId: userId,
-            cart_state: 'active',
-        }, updateSet = {
-            $pull: {
-                cart_products: {
-                    productId
+        try {
+            const query = {
+                cart_userId: userId,
+                cart_state: 'active',
+            }, updateSet = {
+                $pull: {
+                    cart_products: {
+                        productId
+                    }
                 }
-            }
-        };
+            };
 
-        const deletItemCart = await cart.updateOne(query, updateSet);
-        return deletItemCart;
+            const deletItemCart = await cart.updateOne(query, updateSet);
+            return {
+                code: 200,
+                metadata: deletItemCart
+            };
+        } catch (error) {
+            throw error;
+        }
     }
 
     // get list cart [USER]
     static async getListCart({ userId }) {
-        return await cart.findOne({
-            cart_userId: userId
-        }).lean();
+        try {
+            console.log("cart", "cart");
+            const cartXX = await cart.findOne({
+                cart_userId: userId
+            }).lean();
+            if (!cartXX) {
+                return {
+                    code: 409,
+                    message: "cart not exist",
+                }
+            }
+            console.log(cartXX, "cart");
+            return {
+                code: 200,
+                metadata: cartXX
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     // delete cart [USER]

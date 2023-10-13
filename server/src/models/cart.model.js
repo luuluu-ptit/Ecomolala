@@ -36,4 +36,16 @@ var cartSchema = new Schema({
 }
 );
 
+// cartSchema.pre('save', function (next) {
+//     // Calculate the total quantity from the cart_products array
+//     const totalQuantity = this.cart_products.reduce((total, product) => total + product.quantity, 0);
+
+//     // Update the cart_count_product attribute
+//     this.cart_count_product = totalQuantity;
+
+//     next();
+// });
+
+
+
 module.exports = model(DOCUMENT_NAME, cartSchema);

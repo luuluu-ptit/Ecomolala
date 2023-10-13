@@ -7,7 +7,7 @@
 
   - Link drive, docs and diagram : https://drive.google.com/drive/folders/1XE3ptsdTh0jDfGNnlLTUivo6YX95n0Me?usp=sharing
 
-- API (Done 33) :
+- API (Done 34) :
 
   <h5>USER/SHOP-ACCESS<h5>
   - Login [PUBLIC] <br>
@@ -22,6 +22,7 @@
   - Logout  [USER,SHOP]<br>
   <!-- - Tokens [USER,SHOP]<br> -->
   - Add Liked Product [USER,SHOP]<br>
+  - Get Liked Products [USER,SHOP]<br>
   - Update information access of user [USER,SHOP]<br>
   <h5>PRODUCT<h5>
   - Get List Search Product [PUBLIC]<br>
@@ -48,6 +49,7 @@
   - Delete Discount [SHOP]<br>
 
 - FrontEnd :
+
   - Login, sign up and log out <br>
 
 - Curently being researched and developed :

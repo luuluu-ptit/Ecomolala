@@ -184,9 +184,17 @@ class Electronic extends Product {
 
         if (objectParams.product_attributes) {
             //update child
-            await updateProductById_repo({ productId, objectParams, model: electronics });
+            await updateProductById_repo({
+                productId,
+                bodyUpdate: updateNestedObjectParser(objectParams.product_attributes),
+                model: electronics
+            });
+            // await updateProductById_repo({ productId, objectParams, model: electronics });
         }
-        const updateProduct = await super.updateProduct(productId, objectParams);
+        const updateProduct = await super.updateProduct(
+            productId,
+            updateNestedObjectParser(objectParams)
+        );
         return updateProduct;
     }
 }

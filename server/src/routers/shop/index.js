@@ -11,6 +11,7 @@ const router = express.Router();
 router.use(authentication);
 
 router.post('/shop/addLikedProduct/:id', asyncHandler(shopController.addLikedProduct));
+router.get('/shop/getLikedProducts', asyncHandler(shopController.getLikedProducts));
 router.patch('/shop/updateInformationAccessOfUser', asyncHandler(shopController.updateInformationAccessOfUser));
 
 module.exports = router;
