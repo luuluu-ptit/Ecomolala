@@ -201,6 +201,36 @@ const getProductById = async (productId) => {
     }
 }
 
+const checkProductByServer = async (product) => {
+
+    const foundProduct = await getProductById(product.productId);
+    // console.log(foundProduct, "foundXhrProduct");
+    if (foundProduct) {
+        return {
+            shopId: product.shopId,
+            productId: product.productId,
+            price: foundProduct.product_price,
+            name: foundProduct.product_name,
+            quantity: product.quantity,
+            // product_thumb: foundProduct.product_thumb
+        }
+    }
+
+}
+
+const checkProductsByServer = async (products) => {
+    return await Promise.all(products.map(async (product) => {
+        const foundProduct = await getProductById(product.productId);
+        if (foundProduct) {
+            return {
+                price: foundProduct.product_price,
+                quantity: product.quantity,
+                productId: product.productId,
+            }
+        }
+    }))
+}
+
 module.exports = {
     findAllDraftsForShop,
     findAllPublishForShop,
@@ -211,5 +241,7 @@ module.exports = {
     findProduct,
     updateProductById_repo,
     getProductById,
-    // getProductByCategory
+    // getProductByCategory,
+    checkProductByServer,
+    checkProductsByServer,
 }

@@ -8,7 +8,7 @@
 */
 
 const cart = require("../models/cart.model");
-const { getProductById } = require("../models/repositories/product.repo");
+const { getProductById, checkProductByServer } = require("../models/repositories/product.repo");
 
 class cartService {
 
@@ -35,7 +35,10 @@ class cartService {
 
     static async updateUserCartquantity({ userId, product }) {
         try {
+            // console.log("checkProductServerXXXX1")
             const { productId, quantity } = product;
+            // console.log("checkProductServerXXXX2")
+
             const query = {
                 cart_userId: userId,
                 'cart_products.productId': productId,
@@ -46,10 +49,11 @@ class cartService {
                 }
             }, options = { upsert: true, new: true }
 
-            // return await cart.findOneAndUpdate(query, updateSet, options);
+            const newProduct = await cart.findOneAndUpdate(query, updateSet, options);
+
             return {
                 code: 200,
-                metadata: await cart.findOneAndUpdate(query, updateSet, options)
+                metadata: newProduct
             }
         } catch (error) {
             throw error;
@@ -60,6 +64,9 @@ class cartService {
     // add product to cart [USER]
     static async addProductToCart({ userId, product = {} }) {
         try {
+            const checkProductServer = await checkProductByServer(product);
+            // console.log("checkProductServerXXXX", checkProductServer.productId);
+
             //check cart ton tai khong ?
             const userCart = await cart.findOne({
                 cart_userId: userId,
@@ -67,13 +74,12 @@ class cartService {
 
             if (!userCart) {
                 //create new cart for user
-                return await cartService.createUserCart({ userId, product });
+                return await cartService.createUserCart({ userId, product: checkProductServer });
             }
 
             // neu ton tai cart nhung cart rong 
             if (!userCart.cart_products.length) {
-                userCart.cart_products = [product];
-                // return await userCart.save();
+                userCart.cart_products = [checkProductServer];
                 return {
                     code: 200,
                     metadata: await userCart.save()
@@ -84,15 +90,16 @@ class cartService {
             // return await cartService.updateUserCartquantity({ userId, product });
             // Check if the product already exists in the cart
             const existingProduct = userCart.cart_products.find(
-                (cartProduct) => cartProduct.productId === product.productId
+                (cartProduct) => cartProduct.productId === checkProductServer.productId
             );
+            // console.log(existingProduct, "existingProduct");
 
             if (existingProduct) {
                 // If the product already exists, update the quantity
-                return await cartService.updateUserCartQuantity({ userId, product });
+                return await cartService.updateUserCartquantity({ userId, product: checkProductServer });
             } else {
                 // If the product does not exist, add it to the cart
-                userCart.cart_products.push(product);
+                userCart.cart_products.push(checkProductServer);
                 return {
                     code: 200,
                     metadata: await userCart.save(),

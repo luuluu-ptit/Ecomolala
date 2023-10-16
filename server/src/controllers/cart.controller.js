@@ -12,7 +12,7 @@ class CartController {
                 userId: req.user.userId
             })
             return res.status(result.code).json({
-                message: result.code === 200 ? 'Register successfully' : result.message,
+                message: result.code === 200 ? 'Add product to cart successfully' : result.message,
                 metadata: result.metadata
             });
         } catch (error) {
