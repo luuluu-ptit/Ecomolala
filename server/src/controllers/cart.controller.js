@@ -80,22 +80,6 @@ class CartController {
             });
         }
     }
-
-    // delete cart [USER]
-    // deleteCart = async (req, res, next) => {
-    //     try {
-    //         console.log('XXXXXXXX', req.query);
-    //         return res.status(200).json({
-    //             message: 'Delete Discount successfully',
-    //             metadata: await cartService.deleteDiscount({
-    //                 shopId: req.user.userId,
-    //                 codeId: req.query.codeId
-    //             })
-    //         })
-    //     } catch (error) {
-    //         next(error);
-    //     }
-    // }
 }
 
 module.exports = new CartController();

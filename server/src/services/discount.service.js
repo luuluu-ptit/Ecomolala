@@ -11,7 +11,7 @@
 const discountModel = require("../models/discount.model");
 const { product } = require("../models/products.model");
 const { findAllDiscountUnselect, checkDiscountExists } = require("../models/repositories/discount.repo");
-const { findAllProducts } = require("../models/repositories/product.repo");
+const { findAllProducts, checkProductsByServer } = require("../models/repositories/product.repo");
 const { convertToObjectIdMongoDb } = require("../utils");
 
 class discountService {
@@ -266,6 +266,8 @@ class discountService {
 
     static async getDiscountAmount({ codeId, userId, shopId, products }) {
         try {
+            const checkProductsServer = await checkProductsByServer(products);
+            // console.log(checkProductsServer, "Xbox")
             // Apply discount to product;  [USER] ;
             const foundDiscount = await checkDiscountExists({
                 model: discountModel,
@@ -290,8 +292,12 @@ class discountService {
                 discount_type,
                 discount_value,
                 discount_start_date,
-                discount_end_date
+                discount_end_date,
+                discount_product_ids,
+                discount_max_value,
+                discount_shopId
             } = foundDiscount;
+            // console.log("foundDiscountXXXX::", discount_max_value);
 
             if (!discount_is_active) {
                 return {
@@ -313,17 +319,49 @@ class discountService {
             }
 
             let totalOrder = 0;
+            let amount = 0;
+
             if (discount_min_order_value > 0) {
-                totalOrder = products.reduce((acc, product) => {
+                totalOrder = checkProductsServer.reduce(async (acc, product) => {
+                    if (discount_product_ids.includes(product.productId)) {
+                        const amountTpm = discount_type === 'fixed_amount' ? discount_value : ((product.quantity * product.price) * (discount_value / 100));
+                        amount += amountTpm;
+                    }
+                    // const foundProduct = await product.findOne({
+                    //     _id: convertToObjectIdMongoDb(productItem.productId),
+                    //     product_shop: convertToObjectIdMongoDb(discount_shopId)
+                    // })
+                    // console.log("foundProduct::", foundProduct);
+
+                    // if (!foundProduct) {
+                    //     return {
+                    //         code: 409,
+                    //         message: "San pham khong thuoc cua hang nay Hoac cua hang khong co san pham nay"
+                    //     }
+                    // }
+                    // console.log("amount::DDDDSXX", discount_product_ids.includes(product.productId));
                     return acc + (product.quantity * product.price);
-                }, 0);
+                }, 0)
+
+                // console.log("amountrXxx::", amount);
+
                 if (totalOrder < discount_min_order_value) {
                     return {
                         code: 409,
                         message: `Discount require a minimum order value of ${discount_min_order_value} `
                     }
                 }
+
+                if (amount > discount_max_value) {
+                    // console.log("amountrXxx::5", discount_max_value, "XXX", amount);
+                    // return {
+                    //     code: 409,
+                    //     message: `Discount maximum value exceeded is ${discount_max_value}`
+                    // }
+                    amount = discount_max_value;
+                }
             }
+
             if (discount_max_uses_per_user > 0) {
                 const userUsedDiscount = discount_users_used.find(user => user.userId === userId);
                 if (userUsedDiscount) {
@@ -332,7 +370,7 @@ class discountService {
             }
 
             //check xem discount nay la fixed_amount or percentage;
-            const amount = discount_type === 'fixed_amount' ? discount_value : totalOrder * (discount_value / 100);
+            // const amount = discount_type === 'fixed_amount' ? discount_value : totalOrder * (discount_value / 100);
 
             return {
                 code: 200,

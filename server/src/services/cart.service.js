@@ -3,7 +3,6 @@
     + reduce product quantity by one [USER]
     + increase product quantity by one [USER]
     + get list to cart [USER]
-    + delete cart [USER]
     + delete item cart [USER]
 */
 
@@ -20,6 +19,9 @@ class cartService {
             }, updateOrInsert = {
                 $addToSet: {
                     cart_products: product
+                },
+                $inc: {
+                    cart_count_product: product.quantity
                 }
             }, options = { upsert: true, new: true }
 
@@ -45,7 +47,8 @@ class cartService {
                 cart_state: 'active',
             }, updateSet = {
                 $inc: {
-                    'cart_products.$.quantity': quantity
+                    'cart_products.$.quantity': quantity,
+                    cart_count_product: quantity
                 }
             }, options = { upsert: true, new: true }
 
@@ -59,7 +62,6 @@ class cartService {
             throw error;
         }
     }
-
 
     // add product to cart [USER]
     static async addProductToCart({ userId, product = {} }) {
@@ -80,6 +82,7 @@ class cartService {
             // neu ton tai cart nhung cart rong 
             if (!userCart.cart_products.length) {
                 userCart.cart_products = [checkProductServer];
+                userCart.cart_count_product += checkProductServer.quantity;
                 return {
                     code: 200,
                     metadata: await userCart.save()
@@ -149,18 +152,24 @@ class cartService {
                     message: `Product do not belong to the shop`
                 }
             }
-            if (quantity === 0) {
+
+            if ((quantity - old_quantity) <= 0) {
                 //delete product
                 return await cartService.deletItemCart({ userId, productId })
             }
 
-            return await cartService.updateUserCartquantity({
+            const updatedProduct = await cartService.updateUserCartquantity({
                 userId,
                 product: {
                     productId,
                     quantity: quantity - old_quantity,
                 }
             })
+
+            return {
+                code: 200,
+                metadata: updatedProduct
+            };
         } catch (error) {
             throw error;
         }
@@ -212,16 +221,6 @@ class cartService {
             throw error;
         }
     }
-
-    // delete cart [USER]
-    // static async deleteCart({ shopId, codeId }) {
-    //     const deleted = await discountModel.findOneAndDelete({
-    //         discount_code: codeId,
-    //         discount_shopId: convertToObjectIdMongoDb(shopId),
-    //     })
-
-    //     return deleted;
-    // }
 }
 
 

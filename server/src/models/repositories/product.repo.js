@@ -231,6 +231,22 @@ const checkProductsByServer = async (products) => {
     }))
 }
 
+// const findProductByShopAndId = async ({ productId, shopId }) => {
+//     try {
+//         const result = await product.findOne({
+//             _id: convertToObjectIdMongoDb(productId),
+//             product_shop: convertToObjectIdMongoDb(shopId),
+//         });
+//         // console.log("Product detail:", productDetail);
+//         // return productDetail;
+//         console.log("foundProduct0", result);
+
+//         return result;
+//     } catch (error) {
+//         throw error;
+//     }
+// }
+
 module.exports = {
     findAllDraftsForShop,
     findAllPublishForShop,
@@ -244,4 +260,5 @@ module.exports = {
     // getProductByCategory,
     checkProductByServer,
     checkProductsByServer,
+    // findProductByShopAndId
 }

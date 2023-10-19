@@ -1,4 +1,5 @@
-const { getSelectData, unGetSelectData } = require("../../utils");
+const { getSelectData, unGetSelectData, convertToObjectIdMongoDb } = require("../../utils");
+// const discountModel = require("../discount.model");
 
 const findAllDiscountUnselect = async ({
     limit = 50, sort = 'ctime', page = 1,
@@ -38,8 +39,17 @@ const checkDiscountExists = async ({ model, filter }) => {
     return await model.findOne(filter).lean();
 }
 
+// const findDiscountByCodeId = async ({ codeId, discountId, shopId }) => {
+//     return await discountModel.find({
+//         discount_code: codeId,
+//         _id: convertToObjectIdMongoDb(discountId),
+//         discount_shopId: shopId
+//     })
+// }
+
 module.exports = {
     findAllDiscountUnselect,
     findAllDiscountSelect,
     checkDiscountExists,
+    // findDiscountByCodeId
 }

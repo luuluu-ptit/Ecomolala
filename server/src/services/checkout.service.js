@@ -50,7 +50,6 @@ const { findCartById } = require("../models/repositories/cart.repo");
 const { checkProductsByServer } = require("../models/repositories/product.repo");
 const { getDiscountAmount } = require("./discount.service");
 
-
 class checkoutService {
     static async checkoutReview({
         cartId,
@@ -75,12 +74,18 @@ class checkoutService {
 
             //tinh tong tien bill
             for (let i = 0; i < shop_order_ids.length; i++) {
-                const { shopId, shop_discounts = [], item_products = [] } = shop_order_ids[i];
 
-                const checkProductServer = await checkProductsByServer(item_products);
-                console.log("checkProductServer::", checkProductServer);
+                const {
+                    shopId,
+                    shop_discounts = [],
+                    item_products = [],
+                } = shop_order_ids[i];
 
-                if (!checkProductServer[0]) {
+                const checkProductsServer = await checkProductsByServer(item_products);
+
+                shop_order_ids[i].item_products = checkProductsServer;
+
+                if (!checkProductsServer[0]) {
                     return {
                         code: 404,
                         message: "Order wrong"
@@ -88,9 +93,9 @@ class checkoutService {
                 }
 
                 //tong don hang
-                const checkoutPrice = checkProductServer.reduce((acc, product) => {
+                const checkoutPrice = checkProductsServer.reduce((acc, product) => {
                     return acc + (product.quantity * product.price)
-                }, 0);
+                }, 0)
 
                 checkoutOrder.totalPrice += checkoutPrice;
 
@@ -99,28 +104,36 @@ class checkoutService {
                     shop_discounts,
                     priceRaw: checkoutPrice,
                     priceApllyDiscount: checkoutPrice,
-                    item_products: checkProductServer
+                    item_products: checkProductsServer
                 }
 
                 if (shop_discounts.length > 0) {
-                    const { discount = 0, totalPrice = 0 } = await getDiscountAmount({
+                    // console.log("amountrXxx::000");
+
+                    const resultmetadata = await getDiscountAmount({
                         codeId: shop_discounts[0].codeId,
                         userId,
                         shopId,
-                        products: checkProductServer
+                        products: checkProductsServer
                     })
+                    const { discount = 0, totalPrice = 0, totalOrder = 0 } = resultmetadata.metadata;
 
                     checkoutOrder.totalDiscount += discount
 
                     if (discount > 0) {
                         item_checkout.priceApllyDiscount = checkoutPrice - discount
                     }
+
+                    // const foundDiscount = await findDiscountByCodeId({
+                    //     codeId: shop_discounts[0].codeId,
+                    //     discountId: shop_discounts[0].discountId,
+                    //     shopId
+                    // })
                 }
 
                 checkoutOrder.totalCheckout += item_checkout.priceApllyDiscount
                 shopOrderIdsNew.push(item_checkout);
             }
-
             return {
                 code: 200,
                 metadata: {
@@ -133,6 +146,10 @@ class checkoutService {
             throw error;
         }
     }
+
+    // static async checkoutReview(){
+
+    // }
 }
 
-module.exports = checkoutService
+module.exports = checkoutService;
