@@ -47,6 +47,8 @@
   - Update Discount Service [SHOP]<br>
   - Get All Discount By Shop [SHOP]<br>
   - Delete Discount [SHOP]<br>
+  <h5>CHECKOUT/ORDER<h5>
+  - checkout review [USER]<br>
 
 - FrontEnd :
 

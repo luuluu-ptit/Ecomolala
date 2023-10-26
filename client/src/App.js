@@ -1,6 +1,6 @@
 import './App.css';
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import { useDispatch } from "react-redux";
 import Login from "./pages/Login"
 import Register from './pages/Register';
