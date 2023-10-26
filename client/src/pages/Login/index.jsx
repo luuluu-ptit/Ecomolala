@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { Box, TextField, Button, Alert, CircularProgress } from "@mui/material";
 import { isEmail } from "validator";
-import AuthAction from "../../store/actions/auth.action";
+import AuthAction from "../../store/actions/auth.action";
 import "./login.css";
 
 const Login = () => {
