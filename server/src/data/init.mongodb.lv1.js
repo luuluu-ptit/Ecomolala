@@ -2,10 +2,10 @@
 'use strict'
 
 const mongoose = require('mongoose');
-// const { db: { host, port, name } } = require('../configs/config.mongodb.js');
+// const { db: { host, port, name } } = require('../configs/mongodb.js');
 // const connectString = `mongodb://${host}:${port}/${name}`;
 // const connectString = process.env.URL_MONGO_CLOUD;
-const connectString = `mongodb://127.0.0.1:27017/shopDev`;
+const connectString = `mongodb://127.0.0.1:27017/Ecomolala`;
 const { countConnect } = require('../helpers/check.connect');
 
 class Database {
