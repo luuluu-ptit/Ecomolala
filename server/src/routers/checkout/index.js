@@ -13,6 +13,7 @@ router.use(authentication);
 
 //Checkout review
 router.post('/review', asyncHandler(checkoutController.checkoutReview));
+router.post('/orderByUser', asyncHandler(checkoutController.orderByUser));
 
 
 // check permission

@@ -46,9 +46,11 @@
     }
 */
 
+const orderModel = require("../models/order.model");
 const { findCartById } = require("../models/repositories/cart.repo");
 const { checkProductsByServer } = require("../models/repositories/product.repo");
 const { getDiscountAmount } = require("./discount.service");
+const { createLock } = require("./redis.service");
 
 class checkoutService {
     static async checkoutReview({
@@ -147,9 +149,72 @@ class checkoutService {
         }
     }
 
-    // static async checkoutReview(){
+    static async orderByUser({
+        shop_order_ids,
+        cartId,
+        userId,
+        userAddress = {},
+        userPayment = {},
+    }) {
+        const { shopOrderIdsNew, checkoutOrder } = await checkoutService.checkoutReview({
+            cartId,
+            userId,
+            shop_order_ids
+        })
 
-    // }
+        const products = await shopOrderIdsNew.flatMap(order => order.item_products);
+        console.log(products, 'productsXXXXXXXX');
+
+        const createKeyLockProduct = [];
+
+        for (let i = 0; i < products.length; i++) {
+            const { productId, quantity } = products[i];
+
+            const keyLock = await createLock(productId, quantity, cartId);
+            createKeyLockProduct.push(keyLock ? true : false);
+            if (keyLock) {
+                await deleteKeyLock(keyLock);
+            }
+        }
+
+        //neu co 1 sp het hang
+        if (createKeyLockProduct.includes(false)) {
+            return {
+                code: 409,
+                message: "Mot so san pham da het hang, vui long quay lai gio hang..."
+            }
+        }
+
+        const newOrder = await orderModel.create({
+            order_userId: userId,
+            order_checkout: checkoutOrder,
+            order_shipping: userAddress,
+            order_payment: userPayment,
+            order_products: shopOrderIdsNew
+        })
+
+        if (newOrder) {
+
+        }
+
+        return newOrder;
+    }
+
+    static async getOrderByUser() {
+
+    }
+
+    static async getOneOrderByUser() {
+
+    }
+
+    static async cancelOrderByUser() {
+
+    }
+
+    static async updateOrderStatus() {
+
+    }
 }
 
 module.exports = checkoutService;

@@ -20,6 +20,21 @@ class CheckoutController {
         }
     }
 
+    orderByUser = async (req, res, next) => {
+
+        try {
+            const result = await checkoutService.orderByUser(req.body)
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Order by User successfully' : result.message,
+                metadata: result.metadata
+            });
+        } catch (error) {
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
+        }
+    }
 }
 
 module.exports = new CheckoutController();

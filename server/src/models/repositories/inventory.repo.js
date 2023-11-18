@@ -1,5 +1,6 @@
 const { inventories } = require('../../models/inventory.model');
 const { Types } = require("mongoose");
+const { convertToObjectIdMongoDb } = require('../../utils');
 // const { getSelectData, unGetSelectData, convertToObjectIdMongoDb } = require('../../utils');
 
 const insertInventory = async ({ productId, shopId, stock, location = "Unknow" }) => {
@@ -26,6 +27,29 @@ const insertInventory = async ({ productId, shopId, stock, location = "Unknow" }
     return newInventories;
 }
 
+const reservationInventory = async ({ productId, cartId, quantity }) => {
+    const query = {
+        inventory_productId: convertToObjectIdMongoDb(productId),
+        inventory_stock: { $gte: quantity }
+    }, updateInventory = {
+        $inc: {
+            inventory_stock: -quantity
+        },
+        $push: {
+            inventory_reservation: {
+                quantity,
+                cartId,
+                createOn: new Date()
+            }
+        }
+    }, options = {
+        upsert: true, new: true
+    }
+
+    return inventories.updateOne(query, updateInventory);
+}
+
 module.exports = {
     insertInventory,
+    reservationInventory
 }

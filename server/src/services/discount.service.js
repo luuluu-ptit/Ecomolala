@@ -322,28 +322,15 @@ class discountService {
             let amount = 0;
 
             if (discount_min_order_value > 0) {
-                totalOrder = checkProductsServer.reduce(async (acc, product) => {
+                totalOrder = await checkProductsServer.reduce(async (acc, product) => {
                     if (discount_product_ids.includes(product.productId)) {
                         const amountTpm = discount_type === 'fixed_amount' ? discount_value : ((product.quantity * product.price) * (discount_value / 100));
                         amount += amountTpm;
                     }
-                    // const foundProduct = await product.findOne({
-                    //     _id: convertToObjectIdMongoDb(productItem.productId),
-                    //     product_shop: convertToObjectIdMongoDb(discount_shopId)
-                    // })
-                    // console.log("foundProduct::", foundProduct);
-
-                    // if (!foundProduct) {
-                    //     return {
-                    //         code: 409,
-                    //         message: "San pham khong thuoc cua hang nay Hoac cua hang khong co san pham nay"
-                    //     }
-                    // }
-                    // console.log("amount::DDDDSXX", discount_product_ids.includes(product.productId));
-                    return acc + (product.quantity * product.price);
+                    return await acc + (product.quantity * product.price);
                 }, 0)
 
-                // console.log("amountrXxx::", amount);
+                console.log("totalOrderXX::", totalOrder);
 
                 if (totalOrder < discount_min_order_value) {
                     return {
