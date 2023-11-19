@@ -49,6 +49,7 @@
 const orderModel = require("../models/order.model");
 const { findCartById } = require("../models/repositories/cart.repo");
 const { checkProductsByServer } = require("../models/repositories/product.repo");
+const { convertToObjectIdMongoDb } = require("../utils");
 const { getDiscountAmount } = require("./discount.service");
 const { createLock } = require("./redis.service");
 
@@ -156,64 +157,122 @@ class checkoutService {
         userAddress = {},
         userPayment = {},
     }) {
-        const { shopOrderIdsNew, checkoutOrder } = await checkoutService.checkoutReview({
-            cartId,
-            userId,
-            shop_order_ids
-        })
+        try {
+            const { shopOrderIdsNew, checkoutOrder } = await checkoutService.checkoutReview({
+                cartId,
+                userId,
+                shop_order_ids
+            })
 
-        const products = await shopOrderIdsNew.flatMap(order => order.item_products);
-        console.log(products, 'productsXXXXXXXX');
+            const products = await shopOrderIdsNew.flatMap(order => order.item_products);
+            console.log(products, 'productsXXXXXXXX');
 
-        const createKeyLockProduct = [];
+            const createKeyLockProduct = [];
 
-        for (let i = 0; i < products.length; i++) {
-            const { productId, quantity } = products[i];
+            for (let i = 0; i < products.length; i++) {
+                const { productId, quantity } = products[i];
 
-            const keyLock = await createLock(productId, quantity, cartId);
-            createKeyLockProduct.push(keyLock ? true : false);
-            if (keyLock) {
-                await deleteKeyLock(keyLock);
+                const keyLock = await createLock(productId, quantity, cartId);
+                createKeyLockProduct.push(keyLock ? true : false);
+                if (keyLock) {
+                    await deleteKeyLock(keyLock);
+                }
             }
-        }
 
-        //neu co 1 sp het hang
-        if (createKeyLockProduct.includes(false)) {
+            //neu co 1 sp het hang
+            if (createKeyLockProduct.includes(false)) {
+                return {
+                    code: 409,
+                    message: "Mot so san pham da het hang, vui long quay lai gio hang..."
+                }
+            }
+
+            const newOrder = await orderModel.create({
+                order_userId: userId,
+                order_checkout: checkoutOrder,
+                order_shipping: userAddress,
+                order_payment: userPayment,
+                order_products: shopOrderIdsNew
+            })
+
+            if (newOrder) {
+                //remove product from cart
+            }
+
             return {
-                code: 409,
-                message: "Mot so san pham da het hang, vui long quay lai gio hang..."
+                code: 200,
+                metadata: newOrder
             }
+        } catch (error) {
+            throw error;
         }
+    }
 
-        const newOrder = await orderModel.create({
-            order_userId: userId,
-            order_checkout: checkoutOrder,
-            order_shipping: userAddress,
-            order_payment: userPayment,
-            order_products: shopOrderIdsNew
-        })
-
-        if (newOrder) {
-
+    static async getOrdersByUser(userId) {
+        // laasy tong don hang hien co
+        try {
+            const orders = await orderModel.find({ order_userId: userId });
+            if (!order) {
+                return {
+                    code: 409,
+                    message: "Orders not found"
+                }
+            }
+            return {
+                code: 200,
+                metadata: orders
+            }
+        } catch (error) {
+            throw error;
         }
-
-        return newOrder;
     }
 
-    static async getOrderByUser() {
-
+    static async getOneOrderByUser({ orderId, userId }) {
+        // lay chi tiet 1 order
+        try {
+            const order = await orderModel.findOne({
+                _id: convertToObjectIdMongoDb(orderId),
+                order_userId: userId
+            });
+            if (!order) {
+                return {
+                    code: 409,
+                    message: "Order not found"
+                }
+            }
+            return {
+                code: 200,
+                metadata: order
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
-    static async getOneOrderByUser() {
-
-    }
-
-    static async cancelOrderByUser() {
-
+    static async cancelOrderByUser({ orderId, userId }) {
+        // huy don hang hien co
+        try {
+            const order = await orderModel.findOneAndUpdate({
+                _id: convertToObjectIdMongoDb(orderId),
+                order_userId: userId
+            }, { order_status: 'canceled' }, { new: true });
+            if (!order) {
+                return {
+                    code: 409,
+                    message: "Cancel order failed"
+                }
+            }
+            return {
+                code: 200,
+                metadata: order
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     static async updateOrderStatus() {
-
+        // admin or shop update order status
     }
 }
 

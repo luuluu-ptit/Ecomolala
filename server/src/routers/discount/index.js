@@ -3,8 +3,8 @@
 const express = require('express');
 const DiscountController = require('../../controllers/discount.controller');
 const asyncHandler = require('../../helpers/asyncHandler');
-const { authentication } = require('../../auth/authUtils');
-const { authPermissions } = require('../../auth/authPermission');
+const { authentication } = require('../../middleware/authUtils');
+const { authPermissions } = require('../../middleware/authPermission');
 const router = express.Router();
 
 //authentication - middeleware
