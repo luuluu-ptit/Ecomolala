@@ -1,0 +1,48 @@
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+}
+
+.card {
+    margin: auto;
+    background-color: #fff !important;
+    border-radius: 5px;
+    .header-login{
+        align-items: center;
+        text-align: center;
+    }
+    .form-control{
+        width: 350px;
+    }
+}
+
+.form-group-login{
+    margin: 50px;
+}
+
+.form-login-item{
+    margin: 10px 0  10px 0;
+    .text-black{
+       
+        background-color: rgb(174, 211, 247);
+        padding: 3px 8px;
+        border-radius: 2px;
+        border: 1px solid blue;
+
+        &:hover{
+            background-color: rgb(64, 139, 243);
+        }
+    }
+}
+
+.header-login{
+    margin-left: 15px;
+}
+
+.text-white{
+   color: rgb(22, 52, 187);
+   align-items: center;
+}

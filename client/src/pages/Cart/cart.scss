@@ -1,0 +1,33 @@
+.cart-container{
+    position: relative;
+    top: 150px;
+    max-width: 1170px;
+    padding: 20px;
+    margin: 0 auto;
+   
+    
+    .cart-wrapper{
+        .cart-title{
+            background-color: #ffffff;
+            padding: 20px 15px;
+        }
+        .list-product{
+            margin-top: 30px;
+            .product-item{
+                margin-top: 30px;
+                background-color: #ffffff;
+                padding: 15px;
+                .media-product{
+                    img{
+
+                    }
+                }
+            }
+            .payment{
+                margin-top: 30px;
+                background-color: #ffffff;
+                padding: 20px 15px;
+            }
+        }
+    }
+}

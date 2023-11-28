@@ -20,6 +20,7 @@ var cartSchema = new Schema({
                     quantity,
                     name,
                     price,
+                    product_thumb
                 }
             ]
         */

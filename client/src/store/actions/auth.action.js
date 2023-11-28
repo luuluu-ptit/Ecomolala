@@ -5,13 +5,15 @@ import {
     LOGIN_FAIL,
     LOGOUT,
     SET_MESSAGE,
+    CONVERTROLEUSERTOSELLER_SUCCESS,
+    CONVERTROLEUSERTOSELLER_FAIL
 } from "../../constants/actionTypes.constants";
 
-import AuthService from "../../api/index.js"
+import APIService from "../../api/index.js"
 
 const register = ({ name, email, password }) => async (dispatch) => {
     try {
-        const response = await AuthService.register({ name, email, password });
+        const response = await APIService.register({ name, email, password });
         console.log(response, 'XXXXXXX');
         if (response.data.metadata.tokens.accessToken) {
             localStorage.setItem("user", JSON.stringify(response.data.metadata));
@@ -49,7 +51,7 @@ const register = ({ name, email, password }) => async (dispatch) => {
 
 const login = (email, password) => async (dispatch) => {
     try {
-        const response = await AuthService.login({ email, password });
+        const response = await APIService.login({ email, password });
         // console.log(response, 'XXXXXXX');
 
         if (response.data.metadata.tokens.accessToken) {
@@ -81,19 +83,47 @@ const login = (email, password) => async (dispatch) => {
 
         return Promise.reject(error);
     }
-
 };
 
 const logout = () => (dispatch) => {
-    AuthService.logout();
+    APIService.logout();
     localStorage.removeItem("user");
     dispatch({
         type: LOGOUT,
     });
 };
 
+const convertRoleUsertoSeller = () => async (dispatch) => {
+    try {
+        const response = await APIService.convertRoleUsertoSeller();
+        // console.log(response, 'XXXXXXX');
+
+        dispatch({
+            type: CONVERTROLEUSERTOSELLER_SUCCESS,
+            payload: response.data.metadata.user
+        });
+
+        return Promise.resolve(response.data.metadata);
+    } catch (error) {
+        const message =
+            (error.response && error.response.data &&
+                error.response.data.metadata &&
+                error.response.data.metadata.message) ||
+            error.message ||
+            error.toString();
+
+        dispatch({
+            type: CONVERTROLEUSERTOSELLER_FAIL,
+        });
+
+        return Promise.reject(message);
+    }
+
+};
+
 export default {
     register,
     login,
-    logout
+    logout,
+    convertRoleUsertoSeller
 }

@@ -100,27 +100,27 @@ class CheckoutController {
         }
     }
 
-    orderByUser = async (req, res, next) => {
+    // updateOrderStatus = async (req, res, next) => {
 
-        try {
-            const result = await checkoutService.orderByUser({
-                userId: req.user.userId,
-                shop_order_ids: req.body.shop_order_ids,
-                cartId: req.body.cartId,
-                userAddress: req.body.userAddress,
-                userPayment: req.body.userPayment,
-            })
-            return res.status(result.code).json({
-                message: result.code === 200 ? 'Order by User successfully' : result.message,
-                metadata: result.metadata
-            });
-        } catch (error) {
-            return res.status(error.code || 500).json({
-                message: error.message,
-                status: error.status
-            });
-        }
-    }
+    //     try {
+    //         const result = await checkoutService.orderByUser({
+    //             userId: req.user.userId,
+    //             shop_order_ids: req.body.shop_order_ids,
+    //             cartId: req.body.cartId,
+    //             userAddress: req.body.userAddress,
+    //             userPayment: req.body.userPayment,
+    //         })
+    //         return res.status(result.code).json({
+    //             message: result.code === 200 ? 'Order by User successfully' : result.message,
+    //             metadata: result.metadata
+    //         });
+    //     } catch (error) {
+    //         return res.status(error.code || 500).json({
+    //             message: error.message,
+    //             status: error.status
+    //         });
+    //     }
+    // }
 }
 
 module.exports = new CheckoutController();

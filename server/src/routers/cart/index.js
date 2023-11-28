@@ -3,7 +3,7 @@
 const express = require('express');
 const CartController = require('../../controllers/cart.controller');
 const asyncHandler = require('../../helpers/asyncHandler');
-const { authentication } = require('../../auth/authUtils');
+const { authentication } = require('../../middleware/authUtils');
 const router = express.Router();
 
 //authentication - middeleware

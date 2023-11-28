@@ -4,7 +4,7 @@ import { Navigate, useNavigate, Link } from "react-router-dom";
 import { Box, TextField, Button, Alert, CircularProgress } from "@mui/material";
 import { isEmail } from "validator";
 import AuthAction from "../../store/actions/auth.action";
-import "./login.css";
+import "./login.scss";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -30,7 +30,7 @@ const Login = () => {
 
     try {
       await dispatch(AuthAction.login(email, password));
-      navigate("/profile");
+      navigate("/");
       window.location.reload();
     } catch (error) {
       setLoading(false);
@@ -39,7 +39,7 @@ const Login = () => {
   };
 
   if (isLoggedIn) {
-    return <Navigate to="/profile" />;
+    return <Navigate to="/" />;
   }
 
   return (

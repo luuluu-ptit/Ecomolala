@@ -54,6 +54,7 @@ const { getDiscountAmount } = require("./discount.service");
 const { createLock } = require("./redis.service");
 
 class checkoutService {
+
     static async checkoutReview({
         cartId,
         userId,
@@ -158,14 +159,15 @@ class checkoutService {
         userPayment = {},
     }) {
         try {
-            const { shopOrderIdsNew, checkoutOrder } = await checkoutService.checkoutReview({
+            const { metadata } = await checkoutService.checkoutReview({
                 cartId,
                 userId,
                 shop_order_ids
-            })
+            });
+            const { shopOrderIdsNew, checkoutOrder } = metadata;
+            // console.log(shopOrderIdsNew, "shopOrderIdsNew", checkoutOrder, 'checkoutOrder');
 
             const products = await shopOrderIdsNew.flatMap(order => order.item_products);
-            console.log(products, 'productsXXXXXXXX');
 
             const createKeyLockProduct = [];
 
@@ -195,9 +197,9 @@ class checkoutService {
                 order_products: shopOrderIdsNew
             })
 
-            if (newOrder) {
-                //remove product from cart
-            }
+            // if (newOrder) {
+            //     //remove product from cart
+            // }
 
             return {
                 code: 200,
@@ -271,9 +273,9 @@ class checkoutService {
         }
     }
 
-    static async updateOrderStatus() {
-        // admin or shop update order status
-    }
+    // static async updateOrderStatus() {
+    // admin or shop update order status
+    // }
 }
 
 module.exports = checkoutService;

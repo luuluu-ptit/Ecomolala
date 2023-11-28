@@ -1,0 +1,39 @@
+.modalCart {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 80%;
+  width: 300px;
+  max-height: 400px;
+  overflow: auto;
+  background-color: #fefefe;
+  border: 1px solid #888;
+  padding: 20px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.modalCart > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-header-cart,
+.product-content-cart {
+ display: flex;
+ justify-content: space-between;
+}
+
+
+.buttonCart {
+  position: absolute;
+  right: 0;
+  margin : 15px;
+  padding : 5px;
+  color: #1976d2;
+ }
+.imgItem-cart {
+  max-width: 40px;
+  height: auto;
+} 
+ 

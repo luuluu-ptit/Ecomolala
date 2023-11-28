@@ -1,4 +1,5 @@
 .register-container {
+    margin-top: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,8 +17,22 @@
 
 .form-register-item{
     margin: 10px 0  10px 0;
+   
 }
 
 .header-register{
     margin-left: 15px;
+    text-align: center;
+}
+
+.text-black{
+       
+    background-color: rgb(174, 211, 247);
+    padding: 3px 8px;
+    border-radius: 2px;
+    border: 1px solid blue;
+
+    &:hover{
+        background-color: rgb(64, 139, 243);
+    }
 }

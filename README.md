@@ -26,15 +26,13 @@
 
   * Chức năng đánh giá và nhận xét: cho phép khách hàng đánh giá và viết nhận xét về sản phẩm mình đã mua, giúp người dùng khác có thể đưa ra quyết định mua hàng tốt hơn.
 
-  ================================================================
+  * Quản lý khách hàng: cho phép người quản trị quản lý thông tin khách hàng như tên, địa chỉ, email, số điện thoại, lịch sử mua hàng, v.v.
 
-  - Quản lý khách hàng: cho phép người quản trị quản lý thông tin khách hàng như tên, địa chỉ, email, số điện thoại, lịch sử mua hàng, v.v.
+  ================================================================
 
   - Quản lý bán hàng: cho phép người quản trị theo dõi doanh số bán hàng, lợi nhuận, chi phí vận hành và quản lý các hoạt động khác liên quan đến bán hàng.
 
   - Quản lý vận chuyển: cho phép người quản trị quản lý các thông tin về vận chuyển như đối tác vận chuyển, phí vận chuyển, thời gian giao hàng, v.v.
-
-  - Thống kê và báo cáo: cho phép người quản trị theo dõi các số liệu thống kê như doanh thu, số lượng sản phẩm bán ra, số lượng đơn hàng, v.v. và tạo ra các báo cáo phân tích để đưa ra các quyết định kinh doanh.
 
   - Chức năng thanh toán trực tuyến: cho phép khách hàng thanh toán trực tuyến bằng các phương thức thanh toán phổ biến như thẻ tín dụng, ví điện tử, chuyển khoản ngân hàng, v.v.
 

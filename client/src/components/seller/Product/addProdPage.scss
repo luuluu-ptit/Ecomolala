@@ -1,0 +1,11 @@
+.btn-add-prod{
+    border: none;
+    padding: 10px 10px;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: rgb(0, 110, 255);
+    &:hover{
+        cursor: pointer;
+        background-color: rgb(0, 30, 255);
+    }
+}

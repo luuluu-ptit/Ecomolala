@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Box, TextField, Button, Alert } from "@mui/material";
 import { isEmail } from "validator";
 import AuthAction from "../../store/actions/auth.action";
-import "./register.css";
+import "./register.scss";
 
 const Register = () => {
   const [username, setUsername] = useState("");

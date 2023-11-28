@@ -8,6 +8,7 @@ export default function (state = initialState, action) {
 
     switch (type) {
         case SET_MESSAGE:
+            console.log('payload(mess.reducer)=>', payload);
             return { ...state, message: payload };
 
         case CLEAR_MESSAGE:

@@ -1,15 +1,18 @@
+
 .navbar-container{
     display: flex;
     padding: 1rem 1.5rem;
     justify-content: flex-end;
     background-color: rgb(228, 228, 228);
     align-items: center;
+    position: fixed;
 }
 .navbar-container > *{
     margin: 0 1.25rem;
     text-decoration: none;
     font-weight: 600;
     color:rgb(0, 99, 230);
+  
 }
 .navbar-home{
     color:rgb(163, 162, 162);
@@ -30,3 +33,41 @@
     color:rgb(156, 156, 156);
     padding:0.35rem;
 }
+
+.search-item{
+    display: flex;
+    //background-color: red;
+    width: 100%;
+    justify-content: center;
+   
+    .search-icon{
+
+    }
+    input{
+        border: none;
+        outline: none;
+        width: 70%;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+}
+.cart-icon{
+    font-size: 25px;
+}
+
+
+.cart-item {
+    position: relative;
+}
+
+.cart-item::after {
+    content: "";
+    position: absolute;
+    right: -28px;
+    top: 28px;
+    border-width: 13px 88px;
+    border-style: solid;
+    border-color: transparent transparent var(--white-color) transparent;
+    cursor: pointer;
+}
+  

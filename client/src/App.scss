@@ -1,6 +1,19 @@
 /* tat cac the */
-*{
-  box-sizing: inherit;
+@import "~react-image-gallery/styles/scss/image-gallery.scss";
+
+* {
+  //box-sizing: inherit;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1.5;
+  font-size: 16px;
+  background-color: #f5f5f5;
+  
 }
 
 html{
@@ -14,6 +27,21 @@ html{
 
 .text-white{
   color: white;
+}
+
+img{
+  display: block;
+  max-width: 100%;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+ul, li {
+  padding: 0;
+  margin: 0;
 }
 
 /* .btn{

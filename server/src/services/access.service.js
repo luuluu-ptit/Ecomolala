@@ -3,7 +3,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const KeyTokenService = require('./keyToken.service');
-const { createTokenPair, verifyJWT, sendMail } = require('../auth/authUtils');
+const { createTokenPair, verifyJWT, sendMail } = require('../middleware/authUtils');
 const shopModel = require('../models/shop.model');
 // const { product: productModel } = require('../models/products.model');
 const { getInfoData, removeData } = require('../utils');
@@ -193,7 +193,7 @@ class AccessService {
             return {
                 code: 200,
                 metadata: {
-                    shop: getInfoData({ fileds: ['_id', 'name', 'email'], object: foundShop }),
+                    shop: getInfoData({ fileds: ['_id', 'name', 'email', 'roles'], object: foundShop }),
                     tokens
                 }
             }

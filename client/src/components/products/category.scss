@@ -1,0 +1,21 @@
+@import "slick-carousel/slick/slick.css"; 
+@import "slick-carousel/slick/slick-theme.css";
+.category-container{
+    margin-bottom: 70px;
+    .category{
+        border: 1px solid #fff;
+        height: 100px;
+    
+        .category-top{
+            img{
+                width: 100%;
+                object-fit: cover;
+                height: 100px;
+            }
+
+        }
+        .category-bottom{
+
+        }
+    }
+}

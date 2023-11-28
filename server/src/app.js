@@ -5,6 +5,11 @@ const morgan = require('morgan');
 const { default: helmet } = require('helmet');
 
 const app = express();
+const cors = require('cors');
+
+app.use(cors({
+    origin: '*'
+}))
 
 // int middleware
 app.use(morgan("dev"));
