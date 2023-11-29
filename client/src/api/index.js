@@ -69,9 +69,59 @@ const register = async (formData) => {
         }
     }
 }
-const forgotPassword = async (formData) => API.post('/shop/forgotPassword', formData, { headers: { "x-api-key": API_KEY } });
-const resetPassword = async (formData) => API.post('/shop/resetPassword/:token', formData, { headers: { "x-api-key": API_KEY } });
-
+const forgotPassword = async (email) => {
+    try {
+        console.log("forgotPassword");
+        console.log(email)
+        const response = await API.get(`/shop/forgotPassword`, {
+            headers: {
+                "x-api-key": API_KEY
+            },
+            params: {
+                email: email
+            }
+        });
+        console.log("forgotPassword", response)
+        return response;
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+const resetPassword = async (resetToken, password) => {
+    try {
+        const response = await API.post(`/shop/resetPassword/${resetToken}`, { password }, {
+            headers: {
+                "x-api-key": API_KEY
+            }
+        });
+        console.log("resetPassword", response)
+        return response;
+    } catch (error) {
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
 const logout = async () => {
     // console.log({
     //     API_KEY,
@@ -104,20 +154,19 @@ const logout = async () => {
         }
     }
 }
-
-const handlerRefreshToken = async (formData) => API.post('/shop/handlerRefreshToken', formData, { headers: { "x-api-key": API_KEY } });
-
-const changePassword = async (formData) => API.post('/shop/changePassword', formData, { headers: { "x-api-key": API_KEY } });
-const convertRoleUsertoSeller = async () => {
+//Cart
+const addProductToCart = async (product) => {
     try {
-        const response = await API.post('/shop/convertRoleUsertoSeller', {}, {
+        const response = await API.post(`/cart/`, {
+            product
+        }, {
             headers: {
                 "x-api-key": API_KEY,
                 "x-client-id": USER_ID,
                 "authorization": AUTHORIZATION
             }
         });
-        console.log("convertRoleUsertoSeller", response)
+        console.log("addProductToCart", response)
         return response;
     } catch (error) {
         // throw error;
@@ -135,24 +184,18 @@ const convertRoleUsertoSeller = async () => {
         }
     }
 }
-const cancellationOfSales = async (formData) => API.post('/shop/cancellationOfSales', formData, { headers: { "x-api-key": API_KEY } });
-
-
-//SHOP
-const addLikedProduct = async (page) => API.post(`/action/shop/addLikedProduct/:id`, { headers: { "x-api-key": API_KEY } });
-const updateInformationAccessOfUser = async (newCart) => API.patch('/action/shop/updateInformationAccessOfUser', newCart, { headers: { "x-api-key": API_KEY } });
-
-
-//PRODUCTS
-const updateProduct = async (page) => API.patch(`/product/:productId`, { headers: { "x-api-key": API_KEY } });
-const publishProductByShop = async (name) => API.post(`/product/publish/:id`, { headers: { "x-api-key": API_KEY } });
-const unPublishProductByShop = async (searchQuery) => API.post(`/product/unpublish/:id`, { headers: { "x-api-key": API_KEY } });
-const getListSearchProduct = async (value) => {
+const updateProductQuantity = async (shop_order_ids) => {
     try {
-        const response = await API.get(`/product/search/${value}/`, {
-            headers: { "x-api-key": API_KEY }
+        const response = await API.post(`/cart/update`, {
+            shop_order_ids
+        }, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
         });
-        // console.log("getListSearchProduct", response)
+        console.log("updateProductQuantity", response)
         return response;
     } catch (error) {
         // throw error;
@@ -170,19 +213,6 @@ const getListSearchProduct = async (value) => {
         }
     }
 }
-
-const createProduct = (data) => API.post(`/product/`, { ...data }, { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
-const getAllPublishForShop = () => API.get(`/product/published/all`, { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
-const getAllDraftsForShop = () => API.get('/product/drafts/all', { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
-
-//console.log('object===>',AUTHORIZATION);
-
-const findAllProducts = () => API.get(`/product/`, { headers: { "x-api-key": API_KEY } });
-const findProduct = (id) => API.get(`/product/${id}`, { headers: { "x-api-key": API_KEY } });
-
-//Cart
-const addProductToCart = (page) => API.post(`/cart/`, { headers: { "x-api-key": API_KEY } });
-const updateProductQuantity = (newCart) => API.post('/cart/update', newCart, { headers: { "x-api-key": API_KEY } });
 const getListCart = async () => {
     try {
         const response = await API.get(`/cart/`, {
@@ -210,9 +240,109 @@ const getListCart = async () => {
         }
     }
 }
-const deletItemCart = (id, updatedPost) => API.delete(`/cart/`, updatedPost, { headers: { "x-api-key": API_KEY } });
+const deletItemCart = async (productId) => {
+    try {
+        // console.log("productIdAPI", productId)
+        const response = await API.delete(`/cart`,
+            {
+                headers: {
+                    "x-api-key": API_KEY,
+                    "x-client-id": USER_ID,
+                    "authorization": AUTHORIZATION
+                },
+                data: {
+                    productId: productId
+                }
+            });
+        // console.log("deletItemCart", response);
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+const convertRoleUsertoSeller = async () => {
+    try {
+        const response = await API.post('/shop/convertRoleUsertoSeller', {}, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+        // console.log("convertRoleUsertoSeller", response)
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+//PRODUCTS
+const getListSearchProduct = async (value) => {
+    try {
+        const response = await API.get(`/product/search/${value}/`, {
+            headers: { "x-api-key": API_KEY }
+        });
+        // console.log("getListSearchProduct", response)
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+const findAllProducts = () => API.get(`/product/`, { headers: { "x-api-key": API_KEY } });
+const findProduct = (id) => API.get(`/product/${id}`, { headers: { "x-api-key": API_KEY } });
+const createProduct = (data) => API.post(`/product/`, { ...data }, { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
 
 
+
+
+const handlerRefreshToken = async (formData) => API.post('/shop/handlerRefreshToken', formData, { headers: { "x-api-key": API_KEY } });
+const changePassword = async (formData) => API.post('/shop/changePassword', formData, { headers: { "x-api-key": API_KEY } });
+const cancellationOfSales = async (formData) => API.post('/shop/cancellationOfSales', formData, { headers: { "x-api-key": API_KEY } });
+//SHOP
+const addLikedProduct = async (page) => API.post(`/action/shop/addLikedProduct/:id`, { headers: { "x-api-key": API_KEY } });
+const updateInformationAccessOfUser = async (newCart) => API.patch('/action/shop/updateInformationAccessOfUser', newCart, { headers: { "x-api-key": API_KEY } });
+
+
+const updateProduct = async (page) => API.patch(`/product/:productId`, { headers: { "x-api-key": API_KEY } });
+const publishProductByShop = async (name) => API.post(`/product/publish/:id`, { headers: { "x-api-key": API_KEY } });
+const unPublishProductByShop = async (searchQuery) => API.post(`/product/unpublish/:id`, { headers: { "x-api-key": API_KEY } });
+const getAllPublishForShop = () => API.get(`/product/published/all`, { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
+const getAllDraftsForShop = () => API.get('/product/drafts/all', { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
 //DISCOUNT
 const createDiscount = (page) => API.post(`/discount/`, { headers: { "x-api-key": API_KEY } });
 const updateDiscountService = (newCart) => API.patch('/discount/:discount_id', newCart, { headers: { "x-api-key": API_KEY } });

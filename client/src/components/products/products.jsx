@@ -16,7 +16,7 @@ const ListProduct = () => {
 
   const fetchAllProduct = async () => {
     const res = await ApiService.findAllProducts();
-    console.log("check res", res);
+    // console.log("check res", res);
     if (res && res.data) {
       setListProduct(res.data.metadata);
     }

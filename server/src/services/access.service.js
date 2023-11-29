@@ -336,7 +336,11 @@ class AccessService {
             const resetToken = user.createPasswordChangedToken();
             await user.save();
 
-            const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/v1/shop/resetPassword/${resetToken}>Click here</a>`
+            const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href = http://localhost:3000/reset-password/${resetToken}>
+                <button style = {{padding:"10px",background-color :"rgb(0, 99, 230)"}}>
+                    Reset Password
+                </button>
+            </a>`
 
             const data = {
                 email,

@@ -1,14 +1,20 @@
 import "./productDetail.scss";
-import { Col, Row, InputNumber, Rate } from "antd";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+
 import ImageGallery from "react-image-gallery";
-import { useParams } from "react-router-dom";
-import ApiService from "../../api/index";
 import { IoIosAdd } from "react-icons/io";
 import { TbMinus } from "react-icons/tb";
+import { Col, Row, InputNumber, Rate } from "antd";
+
+import Cart from "../../store/actions/cart.action";
+import ApiService from "../../api/index";
 
 const ProductDetail = () => {
   const params = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const id = params.id;
   console.log("id params===>", id);
 
@@ -57,6 +63,33 @@ const ProductDetail = () => {
       } else {
         setCurrentValue(currentValue + 1);
       }
+    }
+  };
+
+  const handleAddToCart = async () => {
+    const product = {
+      productId: productDetail?._id,
+      shopId: productDetail?.product_shop,
+      quantity: currentValue,
+      name: productDetail?.product_name,
+      price: productDetail?.product_price,
+      productThumb: productDetail?.product_thumb,
+    };
+
+    try {
+      const response = await ApiService.addProductToCart(product);
+      // console.log("res detai123l", response.data.metadata);
+      if (response.data.metadata) {
+        dispatch(Cart.addProductListCart(response.data.metadata));
+        alert("Sản phẩm đã được thêm vào giỏ hàng");
+        navigate.push("/cart");
+        // console.log("res detai123l", response.data.metadata);
+      } else {
+        alert("Có lỗi xảy ra, vui lòng thử lại");
+      }
+    } catch (error) {
+      console.error(error);
+      // alert("Có lỗi xảy ra, vui lòng thử lại");
     }
   };
 
@@ -120,8 +153,17 @@ const ProductDetail = () => {
                 <span>{`Trên ${productDetail.product_quantity} sản phẩm có sẵn`}</span>
               </div>
               <div className="btn-buy-add">
-                <button className="add-btn">Thêm vào giỏ hàng</button>
-                <button className="buy-btn">Mua ngay</button>
+                <button className="add-btn" onClick={handleAddToCart}>
+                  Thêm vào giỏ hàng
+                </button>
+                <button
+                  className="buy-btn"
+                  onClick={async () => {
+                    navigate("/checkout");
+                  }}
+                >
+                  Mua ngay
+                </button>
               </div>
             </div>
           </Col>

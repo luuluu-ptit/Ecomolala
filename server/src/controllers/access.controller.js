@@ -101,7 +101,7 @@ class AccessController {
             });
         } catch (error) {
             return res.status(error.code || 500).json({
-                message: error.message,
+                // message: error.message,
                 status: error.status
             });
         }

@@ -1,5 +1,5 @@
 // import { useState } from "react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -42,6 +42,16 @@ const NavBar = () => {
   const { isShop } = useSelector((state) => state.auth);
   const isShopPermission = isShop.includes("SHOP");
 
+  const { cart_products } = useSelector((state) => state.cartReducer);
+
+  const cart_count_product = useMemo(() => {
+    return cart_products.reduce((cart_count_product, item) => {
+      return (cart_count_product += item.quantity);
+    }, 0);
+  }, [cart_products]);
+  // const { cart_count_product } = useSelector((state) => state.cartReducer);
+  // console.log("cart_count_product", cart_count_product);
+
   const logOut = useCallback(() => {
     dispatch(AuthAction.logout());
   }, [dispatch]);
@@ -60,24 +70,13 @@ const NavBar = () => {
     }
   }, [search, dispatch]);
 
-  // Thêm trạng thái để kiểm tra xem giỏ hàng đã được lấy từ API chưa
-  const [isCartFetched, setIsCartFetched] = useState(false);
-
-  // Thêm hàm để gọi API lấy danh sách sản phẩm trong giỏ hàng
-  const fetchCartItems = useCallback(async () => {
-    // Kiểm tra xem giỏ hàng đã được lấy từ API chưa
-    if (!isCartFetched) {
-      try {
-        const response = await API.getListCart();
-        console.log(response, "XXXXXXCart");
-        dispatch(Cart.getProductListCart(response.data.metadata));
-        setCartItems(response.data.metadata.cart_products);
-        setIsCartFetched(true);
-      } catch (error) {
-        console.error(error);
-      }
+  const fetchCartItems = async () => {
+    try {
+      setCartItems(cart_products);
+    } catch (error) {
+      console.error(error);
     }
-  }, [isCartFetched]);
+  };
 
   const handleCartHover = () => {
     fetchCartItems();
@@ -194,7 +193,12 @@ const NavBar = () => {
         <Popover
           placement="bottom"
           // title=""
-          content={<ModalCart cartItems={cartItems} />}
+          content={
+            <ModalCart
+              cartItems={cartItems}
+              cart_count_product={cart_count_product}
+            />
+          }
           trigger="hover"
           onVisibleChange={handleCartHover}
         >
@@ -204,7 +208,13 @@ const NavBar = () => {
             aria-label="menu"
             onClick={() => navigate("/cart")}
           >
-            <ShoppingCartIcon className="cart-icon" />
+            {/* <ShoppingCartIcon className="cart-icon" /> */}
+            <Badge
+              badgeContent={cart_count_product === 0 ? 0 : cart_count_product}
+              color="error"
+            >
+              <ShoppingCartIcon className="cart-icon" />
+            </Badge>
           </IconButton>
         </Popover>
       </Toolbar>

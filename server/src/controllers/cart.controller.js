@@ -48,6 +48,7 @@ class CartController {
         try {
             const result = await cartService.deletItemCart({
                 ...req.body,
+                // productId: req.params.productId,
                 userId: req.user.userId
             })
             return res.status(result.code).json({

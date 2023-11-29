@@ -1,13 +1,67 @@
 import "./cart.scss";
+import React, { useMemo } from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import ImgProduct from "../../assets/banner-4.jpg";
-import { Row, Col, Divider, Checkbox, InputNumber, Button } from "antd";
+// import ImgProduct from "../../assets/banner-4.jpg";
+import { Row, Col, Divider, Checkbox, InputNumber, Button, Tag } from "antd";
 import { DeleteTwoTone } from "@ant-design/icons";
+
+import Cart from "../../store/actions/cart.action";
+import ApiService from "../../api/index";
+
 const CartPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { cart_products } = useSelector((state) => state.cartReducer);
   // console.log(cart_products, "cart_productsXX999");
+  const totalPrice = useMemo(() => {
+    return cart_products.reduce((totalPrice, item) => {
+      return (totalPrice += item.quantity * item.price);
+    }, 0);
+  }, [cart_products]);
+
+  const hanldeUpdateQuanityProduct = async (newValue, productId) => {
+    const shop_order_ids = cart_products.map((item) => ({
+      shopId: item.shopId,
+      item_products: [
+        {
+          quantity: newValue,
+          price: item.price,
+          shopId: item.shopId,
+          old_quantity: item.quantity,
+          productId: productId,
+        },
+      ],
+      version: 203,
+    }));
+
+    try {
+      const response = await ApiService.updateProductQuantity(shop_order_ids);
+      if (response) {
+        dispatch(Cart.updateProductListCart(response.data.metadata.metadata));
+        // console.log("res detai123l", response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deletItemCart = async (productId) => {
+    console.log("error deleting");
+    try {
+      console.log("0000response12345@@");
+      const response = await ApiService.deletItemCart(productId);
+      console.log(response, "response12345@@");
+      if (response) {
+        dispatch(Cart.deletItemCart(productId));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -32,7 +86,10 @@ const CartPage = () => {
           <Divider />
           <div className="list-product">
             {cart_products?.map((item) => (
-              <div key={item.id} className="product-item">
+              <div key={item.productId} className="product-item">
+                <Tag bordered={false} color="error" className="shop-name">
+                  MenSwear Shop giá rẻ
+                </Tag>
                 <Row>
                   <Col span={10}>
                     <Row gutter={[20]}>
@@ -53,10 +110,13 @@ const CartPage = () => {
                     <div className="quantity-prod">
                       <InputNumber
                         min={1}
-                        max={10}
+                        max={100}
                         defaultValue={1}
                         style={{ width: 200 }}
                         value={item.quantity}
+                        onChange={(value) =>
+                          hanldeUpdateQuanityProduct(value, item.productId)
+                        }
                       />
                     </div>
                   </Col>
@@ -64,9 +124,17 @@ const CartPage = () => {
                     <div className="price-prod">{item.price}</div>
                   </Col>
                   <Col span={3}>
-                    <div className="quantity-prod">
+                    <button
+                      style={{
+                        border: "none",
+                        cursor: "pointer",
+                        backgroundColor: "white",
+                      }}
+                      className="quantity-prod "
+                      onClick={() => deletItemCart(item.productId)}
+                    >
                       <DeleteTwoTone twoToneColor="#eb2f96" />
-                    </div>
+                    </button>
                   </Col>
                 </Row>
               </div>
@@ -76,10 +144,16 @@ const CartPage = () => {
               <Row>
                 <Col span={18}></Col>
                 <Col span={4}>
-                  <span>Tổng tiền: 199.999.000</span>
+                  <span>Tổng tiền: {totalPrice} VNĐ</span>
                 </Col>
                 <Col span={2}>
-                  <Button type="primary" danger>
+                  <Button
+                    type="primary"
+                    danger
+                    onClick={async () => {
+                      navigate("/checkout");
+                    }}
+                  >
                     Mua hàng
                   </Button>
                 </Col>

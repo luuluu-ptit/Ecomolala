@@ -20,7 +20,6 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     setLoading(true);
 
     if (!email || !isEmail(email) || !password) {
@@ -103,6 +102,13 @@ const Login = () => {
                 </span>
               </Button>
             </div>
+            <Button
+              // className="btn btn--primary"
+              component={Link}
+              to="/forgot-password"
+            >
+              <span className="text-white">Quên mật khẩu ?</span>
+            </Button>
 
             {message && (
               <Box className="form-group">

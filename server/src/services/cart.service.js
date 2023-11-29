@@ -178,22 +178,34 @@ class cartService {
     // delete item cart [USER]
     static async deletItemCart({ userId, productId }) {
         try {
+            const removeIt = { productId: productId };
             const query = {
                 cart_userId: userId,
                 cart_state: 'active',
             }, updateSet = {
                 $pull: {
-                    cart_products: {
-                        productId
-                    }
+                    cart_products: removeIt
                 }
             };
-
             const deletItemCart = await cart.updateOne(query, updateSet);
-            return {
-                code: 200,
-                metadata: deletItemCart
-            };
+            // return {
+            //     code: 200,
+            //     metadata: deletItemCart
+            // };
+
+            if (deletItemCart.modifiedCount === 0) {
+                // Không có sản phẩm nào được xoá
+                return {
+                    code: 404,
+                    message: 'No item found to delete'
+                };
+            } else {
+                // Một sản phẩm đã được xoá
+                return {
+                    code: 200,
+                    metadata: deletItemCart
+                };
+            }
         } catch (error) {
             throw error;
         }

@@ -20,6 +20,8 @@ import TableProductSeller from './components/seller/Product/TableProductSeller';
 import DashBoard from './components/seller/DashBoard/DashBoard';
 import AddProductPage from './components/seller/Product/AddProductPage';
 import UpdateProductPage from './components/seller/Product/UpdateProductPage ';
+import ForgotPassword from './pages/Password/forgotpassword';
+import ResetPassword from './pages/Password/resetPassword';
 
 function Layout() {
 
@@ -44,6 +46,10 @@ function Layout() {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
+
                 <Route path="/seller" element={<SellerBoard />}>
                     <Route index element={<DashBoard />} />
                     <Route path="products-manage" element={<TableProductSeller />} />
