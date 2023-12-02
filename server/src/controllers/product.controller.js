@@ -1,5 +1,6 @@
 'use strict';
 
+const shopModel = require("../models/shop.model");
 const ProductService = require("../services/product.service");
 
 class ProductController {
@@ -7,11 +8,13 @@ class ProductController {
     //CREATE PRODUCT
     createProduct = async (req, res, next) => {
         try {
+            const user = await shopModel.findById(req.user.userId);
             return res.status(200).json({
                 message: 'Create new product successfully',
                 metadata: await ProductService.createProduct(req.body.product_type, {
                     ...req.body,
-                    product_shop: req.user.userId
+                    product_shop: req.user.userId,
+                    product_shop_name: user.name
                 })
             })
         } catch (error) {
@@ -125,6 +128,23 @@ class ProductController {
         }
     }
 
+    findProduct = async (req, res, next) => {
+        try {
+            const result = await ProductService.findProduct({
+                product_id: req.params.product_id
+            })
+            return res.status(result.code).json({
+                message: result.code === 200 ? 'Get product successfully' : result.message,
+                metadata: result.metadata
+            });
+        } catch (error) {
+            return res.status(error.code || 500).json({
+                message: error.message,
+                status: error.status
+            });
+        }
+    }
+
     findAllProducts = async (req, res, next) => {
         try {
             const result = await ProductService.findAllProducts(req.query)
@@ -140,13 +160,13 @@ class ProductController {
         }
     }
 
-    findProduct = async (req, res, next) => {
+    getProductByCategory = async (req, res, next) => {
         try {
-            const result = await ProductService.findProduct({
-                product_id: req.params.product_id
+            const result = await ProductService.getProductByCategory({
+                product_type: req.query.product_type
             })
             return res.status(result.code).json({
-                message: result.code === 200 ? 'Get product successfully' : result.message,
+                message: result.code === 200 ? 'Get Products By Category successfully' : result.message,
                 metadata: result.metadata
             });
         } catch (error) {

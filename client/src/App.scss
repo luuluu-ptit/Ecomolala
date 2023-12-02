@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 /* tat cac the */
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
@@ -13,7 +16,6 @@ body{
   line-height: 1.5;
   font-size: 16px;
   background-color: #f5f5f5;
-  
 }
 
 html{
@@ -44,20 +46,20 @@ ul, li {
   margin: 0;
 }
 
-/* .btn{
-  min-width: 124px;
-  height: 34px;
-  text-decoration: none;
-  border: none;
-  border-radius: 2px;
-  font-size: 1.5rem;
-  padding: 0px 12px;
-  outline: none;
-  cursor: pointer;
-  color: var(--text-color); 
-  background-color: var(--white-color);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.6rem;
-} */
+//  .btn{
+//   min-width: 124px;
+//   height: 34px;
+//   text-decoration: none;
+//   border: none;
+//   border-radius: 2px;
+//   font-size: 1.5rem;
+//   padding: 0px 12px;
+//   outline: none;
+//   cursor: pointer;
+//   color: var(--text-color); 
+//   background-color: var(--white-color);
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+//   line-height: 1.6rem;
+// } 

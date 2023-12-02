@@ -4,6 +4,7 @@
 + delete a comment [USER , SHOP]
 */
 const Comment = require("../models/comment.model");
+const shopModel = require("../models/shop.model");
 
 const { convertToObjectIdMongoDb } = require("../utils");
 
@@ -12,9 +13,11 @@ class CommentService {
         productId, userId, content, parentCommentId = null
     }) {
         try {
+            const user = await shopModel.findById(userId);
             const comment = new Comment({
                 comment_productId: productId,
                 comment_userId: userId,
+                comment_userName: user.name,
                 comment_content: content,
                 comment_parentId: parentCommentId
             })
@@ -105,6 +108,7 @@ class CommentService {
                     comment_left: 1,
                     comment_right: 1,
                     comment_parentId: 1,
+                    comment_userName: 1
                 }).sort({
                     comment_left: 1,
                 })
@@ -123,6 +127,7 @@ class CommentService {
                 comment_left: 1,
                 comment_right: 1,
                 comment_parentId: 1,
+                comment_userName: 1
             }).sort({
                 comment_left: 1,
             })

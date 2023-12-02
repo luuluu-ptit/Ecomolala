@@ -125,29 +125,27 @@ const findAllProducts = async ({ limit, sort, page, filter, select }) => {
     }
 }
 
-// const getProductByCategory = async ({ limit, sort, page, filter, select }) => {
+const getProductByCategory = async ({ limit, sort, page, filter, select }) => {
+    try {
+        const skip = (page - 1) * limit;
+        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 };
+        const products = await product.find({ ...filter })
+            .sort(sortBy)
+            .skip(skip)
+            .limit(limit)
+            .select(getSelectData(select))
+            .lean();
 
-//     try {
-//         const skip = (page - 1) * limit;
-//         const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 };
-//         const products = await product.find(filter)
-//             .sort(sortBy)
-//             .skip(skip)
-//             .limit(limit)
-//             .select(getSelectData(select))
-//             .lean();
+        return {
+            code: 200,
+            metadata: products
+        };
+    } catch (error) {
+        throw error;
+    }
+}
 
-//         console.log("products:::::", products);
-//         // return products;
-//         return {
-//             code: 200,
-//             metadata: products
-//         };
-//     } catch (error) {
-//         // console.log("Error while querying products:", error);
-//         throw error;
-//     }
-// }
+
 
 const findProduct = async ({ product_id, unselect }) => {
     try {
@@ -257,7 +255,7 @@ module.exports = {
     findProduct,
     updateProductById_repo,
     getProductById,
-    // getProductByCategory,
+    getProductByCategory,
     checkProductByServer,
     checkProductsByServer,
     // findProductByShopAndId

@@ -254,6 +254,7 @@ const AddProductPage = () => {
                             className="btn-add-prod"
                             onClick={(e) => {
                               e.preventDefault();
+                              form.setFieldsValue({ isPublished: valueRadio });
                               form.submit();
                             }}
                           >

@@ -3,12 +3,17 @@ import { Typography } from "@mui/material";
 import {
   AppstoreOutlined,
   ExceptionOutlined,
-  TeamOutlined,
+  GiftOutlined,
   UserOutlined,
-  // DollarCircleOutlined,
+  InboxOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  // DownOutlined,
+  IdcardOutlined,
+  AppstoreAddOutlined,
+  UnorderedListOutlined,
+  OrderedListOutlined,
+  FileAddOutlined,
+  CarOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Button, theme, Dropdown, Space, Avatar } from "antd";
 import { useState } from "react";
@@ -29,53 +34,62 @@ const SellerPage = () => {
       label: <Link to={"/seller"}>DashBoard</Link>,
     },
     {
-      key: "newProduct",
-      icon: <UserOutlined />,
-      label: <Link to={"/seller/new-product"}>New Product</Link>,
-    },
-    {
-      //key: "2",
-      icon: <UserOutlined />,
-      label: <span>Catalog</span>,
+      icon: <InboxOutlined />,
+      label: <span>Quản lý sản phẩm</span>,
       children: [
         {
-          label: <Link to="/seller/products-manage">Product</Link>,
-          key: "Product",
-          icon: <TeamOutlined />,
+          label: <Link to="/seller/products-manage">Tất cả sản phẩm</Link>,
+          key: "Products",
+          icon: <UnorderedListOutlined />,
         },
         {
-          label: "Category",
-          key: "Category",
-          icon: <TeamOutlined />,
+          label: <Link to={"/seller/new-product"}>Thêm sản phẩm</Link>,
+          key: "Add_product",
+          icon: <AppstoreAddOutlined />,
         },
       ],
     },
     {
-      icon: <UserOutlined />,
-      label: <span>Customer</span>,
+      icon: <GiftOutlined />,
+      label: <span>Kênh Marketing</span>,
       children: [
         {
-          label: <Link to="/seller/products-manage">Sản phẩm</Link>,
-          key: "crud",
-          icon: <TeamOutlined />,
+          label: <Link to="/seller/new-discount">Thêm mã giảm giá</Link>,
+          key: "Add_discount",
+          icon: <FileAddOutlined />,
         },
         {
-          label: "Coupons",
-          key: "Coupons",
-          icon: <TeamOutlined />,
+          label: <Link to="">Mã giảm giá của tôi</Link>,
+          key: "My_discount",
+          icon: <OrderedListOutlined />,
+        },
+        {
+          label: <Link to="">Sản Phẩm Có Mã Giảm Giá</Link>,
+          key: "productsApllyDiscount",
+          icon: <UnorderedListOutlined />,
         },
       ],
     },
     {
-      key: "order",
+      key: "Shop",
+      icon: <IdcardOutlined />,
+      label: <Link to="">Hồ Sơ Cửa hàng</Link>,
+    },
+    {
+      key: "Order",
       icon: <ExceptionOutlined />,
-      label: <span>Order</span>,
+      label: <Link to="">Quản Lý Đơn Hàng</Link>,
     },
     {
-      key: "return home",
-      // icon: <AppstoreOutlined />,
-      label: <Link to={"/"}>Return Home Page</Link>,
+      key: "Ship",
+      icon: <CarOutlined />,
+      label: <Link to="">Quản Lý Vận Chuyển</Link>,
     },
+    // {
+    //   key: "return home",
+    //   // icon: <AppstoreOutlined />,
+    //   label: <Link to={"/"}>Return Home Page</Link>,
+    // },
   ];
 
   return (
@@ -88,8 +102,15 @@ const SellerPage = () => {
           theme="light"
           style={{ borderRight: " 1px solid #ececec" }}
         >
-          <div style={{ height: 32, margin: 16, textAlign: "center" }}>
-            Seller
+          <div
+            style={{
+              height: 32,
+              margin: 30,
+              textAlign: "center",
+              color: "#0079d3",
+            }}
+          >
+            <h1>ECOMOLALA</h1>KÊNH NGƯỜI BÁN
           </div>
 
           <Menu mode="inline" defaultSelectedKeys={["1"]} items={item} />

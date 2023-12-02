@@ -22,6 +22,7 @@ const ModalCart = ({ cartItems, cart_count_product }) => {
         cartItems.map((item) => (
           <div key={item.productId}>
             <img
+              style={{ width: 50, height: 40, backgroundSize: "cover" }}
               src={item.product_thumb}
               alt={item.name}
               className="imgItem-cart"

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import "../../components/products/product.scss";
-import ApiService from "../../api/index.js";
+import "./ProductSearch.css";
+
 import { useNavigate } from "react-router-dom";
-// import CategoryProduct from "./category.jsx";
-
 import { useSelector } from "react-redux";
+// import { useEffect, useState } from "react";
 
+// import CategoryProduct from "./category.jsx";
 import FilterNav from "./FilterNav.jsx";
 
 const ProductSearch = () => {
@@ -29,10 +29,13 @@ const ProductSearch = () => {
     <>
       <div className="container">
         {/* <FilterNav onFilter={handleFilter} /> */}
-        <FilterNav />
+        <h3 style={{ color: "blue" }}>BỘ LỌC TÌM KIẾM</h3>
+        <div className="title_container-item filterNav-item">
+          <FilterNav />
+        </div>
 
-        <h3 style={{ color: "blue" }}>Sản Phẩm </h3>
-        <div className="list-card">
+        <h3 style={{ color: "blue" }}>DANH SÁCH SẢN PHẨM GỢI Ý</h3>
+        <div className="list-card search_container-item">
           {products?.map((item, index) => {
             return (
               <div
@@ -41,7 +44,7 @@ const ProductSearch = () => {
                 onClick={(e) => handleRedirect(e, item._id)}
               >
                 <a href="" className="card-media">
-                  <img src={item.product_thumb} alt="#catdImg" />
+                  <img src={item.product_thumb[0]} alt="#catdImg" />
                 </a>
                 <a href="" className="tag-discount">
                   Discount
@@ -52,7 +55,7 @@ const ProductSearch = () => {
                 <p className="card-desc">{item.product_description}</p>
                 <a className="card-info">
                   <div className="card-price">{item.product_price}</div>
-                  <div className="card-sold">Đã bán 12k</div>
+                  <div className="card-sold">Sold 12k</div>
                 </a>
               </div>
             );

@@ -7,7 +7,7 @@ class InventoryController {
             const result = await addStockToInventory({
                 stock: req.body.stock,
                 productId: req.body.productId,
-                shopId: req.user
+                shopId: req.user.userId
             })
             return res.status(result.code).json({
                 message: result.code === 200 ? "add stock to inventory successfully" : result.message,

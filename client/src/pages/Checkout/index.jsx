@@ -14,12 +14,12 @@ const CheckoutPage = () => {
               </Row>
               <Row>
                 <Col span={6}>
-                  <div className="title-address">Đỗ Văn Tuấn</div>
-                  <div className="title-address">0389047214</div>
+                  <div className="title-address">Konjluu</div>
+                  <div className="title-address">0832311201</div>
                 </Col>
                 <Col span={10}>
                   <div className="title-address">
-                    Số 133 Nguyễn Văn Trỗi - Mộ Lao - Hà Đông
+                    Số 133 Đường Vĩnh Phúc - Ba Đình - Hà Nội
                   </div>
                 </Col>
                 <Col span={5}>

@@ -1,3 +1,4 @@
+import "./navbar.scss";
 // import { useState } from "react";
 import React, { useCallback, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -6,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import AuthAction from "../../store/actions/auth.action";
 import ProductList from "../../store/actions/searchProducts.action";
-import Cart from "../../store/actions/cart.action";
+// import Cart from "../../store/actions/cart.action";
 
 import ModalCart from "../modal/modalCart";
 
@@ -26,7 +27,6 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
-import "./navbar.scss";
 
 import API from "../../api/index";
 
@@ -39,8 +39,9 @@ const NavBar = () => {
   const [search, setSearch] = useState("");
 
   const { user: currentUser } = useSelector((state) => state.auth);
-  const { isShop } = useSelector((state) => state.auth);
-  const isShopPermission = isShop.includes("SHOP");
+  const { roles } = useSelector((state) => state.auth?.user?.shop);
+  console.log(roles, "roles");
+  const isShopPermission = roles.includes("SHOP");
 
   const { cart_products } = useSelector((state) => state.cartReducer);
 
@@ -93,11 +94,11 @@ const NavBar = () => {
             padding="10px"
             style={{ cursor: "pointer" }}
             onClick={async () => {
-              navigate("/seller");
+              // navigate("/seller");
+              window.open("http://localhost:3000/seller");
             }}
-            // to="/seller"
           >
-            Store manager
+            Kênh người bán
           </Typography>
         ) : (
           <Typography
@@ -108,11 +109,10 @@ const NavBar = () => {
             style={{ cursor: "pointer" }}
             onClick={async () => {
               await convertRoleUsertoSeller();
-              navigate("/seller");
+              window.open("http://localhost:3000/seller");
             }}
-            // to="/seller"
           >
-            Become a Seller
+            Đăng kí trở thành người bán
           </Typography>
         )}
         <Typography sx={{ flexGrow: 1 }}>
@@ -162,7 +162,7 @@ const NavBar = () => {
           underline="none"
           sx={{ flexGrow: 1, marginLeft: 1 }}
         >
-          Logo
+          Ecomolala
         </Typography>
 
         <div className="search-item">
@@ -175,7 +175,8 @@ const NavBar = () => {
             <SearchIcon />
           </IconButton>
           <input
-            style={{ padding: "10px" }}
+            className="search-input"
+            style={{ padding: "10px", color: "black" }}
             type="text"
             placeholder="Search for products"
             value={search}

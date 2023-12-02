@@ -1,10 +1,17 @@
 @import "slick-carousel/slick/slick.css"; 
 @import "slick-carousel/slick/slick-theme.css";
 .category-container{
-    margin-bottom: 70px;
+    margin-bottom: 40px;
+    .list-category{
+        margin-top : 15px;
+        padding : 20px 20px 10px 20px;
+        background-color: rgb(243, 239, 235);
+
+    }
     .category{
         border: 1px solid #fff;
         height: 100px;
+        cursor: pointer;
     
         .category-top{
             img{

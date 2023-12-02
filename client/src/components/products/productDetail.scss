@@ -1,4 +1,12 @@
-
+.title-product-detail-container{
+    position: relative;
+    top: 150px;
+    max-width: 1170px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    color :  #007bff;
+    // background-color: #ffffff;
+}
 .product-detail-container{
     position: relative;
     top: 150px;
@@ -30,7 +38,7 @@
                 padding: 5px;
                 font-size: 16px;
                 border-radius: 3px;
-                background-color: rgba(127, 191, 255, 0.729);
+                background-color: #7fbfffba;
             }
         }
         .price{
@@ -87,5 +95,90 @@
                 background-color: rgb(0, 38, 255);
             }
         }
+    }  
+}
+
+.shop-container{
+    position: relative;
+    top: 150px;
+    max-width: 1170px;
+    padding: 20px;
+    margin: 30px auto;
+    background-color: #ffffff;
+}
+
+.comment-container{
+    // margin-top: 40px;
+    position: relative;
+    top: 150px;
+    max-width: 1170px;
+    padding: 20px;
+    margin: 30px auto;
+    background-color: #ffffff;
+}
+
+.comment-list{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+    input[type="text"] {
+        border: 1px solid #ccc; /* Border around the input field */
+        border-radius: 4px; /* Rounded corners */
+        padding: 10px; /* Padding inside the input field */
+        margin: 10px 0; /* Margin outside the input field */
+        font-size: 16px; /* Font size */
+        color: #333; /* Text color */
+        background-color: #fff; /* Background color */
+       }
+       .my-input {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 16px;
+        color: #333;
+        background-color: #fff;
+       }
+    
+}
+
+/** Demo */
+.list-detail_product {
+    padding: 20px;
+    list-style: none;
+    // text-align: center;
+  
+    width: calc(100% - 40px);
+    max-width: 1000px;
+    margin: 40px auto;
+}
+  
+.item-detail_product {
+    &:not(:last-child) {
+      margin-bottom: 50px;
     }
 }
+  
+.title-item-detail_product {
+    display: inline-flex;
+    width: 240px;
+    margin: 0;
+    margin-right: 40px;
+    // text-align: center;
+
+  
+    /* THE IMPORTANT BIT */
+    position: sticky;
+    top: 40px;
+  }
+  
+  .content-item-detail_product {
+    display: inline-flex;
+    width: calc(100% - 285px);
+    margin: 0;
+    text-align: center;
+    // To align completely with h2 sibling
+    position: relative;
+    // top: -5px;
+  }
+  

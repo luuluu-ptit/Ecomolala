@@ -6,14 +6,16 @@ import {
     LOGIN_FAIL,
     LOGOUT,
     CONVERTROLEUSERTOSELLER_SUCCESS,
-    CONVERTROLEUSERTOSELLER_FAIL
+    CONVERTROLEUSERTOSELLER_FAIL,
+    UPDATE_INFORMATION_USER_SUCCESS,
+    UPDATE_INFORMATION_USER_FAIL
 } from "../../constants/actionTypes.constants";
 
 const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = user
-    ? { isLoggedIn: true, user, isShop: ["USER"] }
-    : { isLoggedIn: false, user: null, isShop: [] };
+    ? { isLoggedIn: true, user }
+    : { isLoggedIn: false, user: null };
 
 export default function (state = initialState, action) {
     // console.log(initialState, "XXX")
@@ -52,13 +54,34 @@ export default function (state = initialState, action) {
         case CONVERTROLEUSERTOSELLER_SUCCESS:
             return {
                 ...state,
-                isShop: [...payload.roles, 'SHOP']
+                user: {
+                    ...state.user,
+                    roles: payload.roles
+                }
+                // isShop: [...payload.roles, 'SHOP']
                 // isShop: state.isShop.includes('SHOP') ? state.isShop : [...payload.roles, 'SHOP']
             };
         case CONVERTROLEUSERTOSELLER_FAIL:
             return {
                 ...state,
-                isShop: ["USER"]
+                // isShop: ["USER"]
+            };
+        case UPDATE_INFORMATION_USER_SUCCESS:
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    shop: {
+                        ...state.user.shop,
+                        name: payload.name,
+                        email: payload.email
+                    }
+                }
+            };
+        case UPDATE_INFORMATION_USER_FAIL:
+            return {
+                ...state,
+                error: payload.error
             };
         default:
             return state;

@@ -1,0 +1,59 @@
+/* comments.scss */
+
+.comment-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .comment {
+    border: 1px solid #ddd;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 4px;
+  }
+  
+  .comment button {
+    background-color: #0079d3;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .comment button:hover {
+    background-color: #005ea6;
+  }
+  
+  .comment-reply {
+    margin-left: 20px; /* Điều này làm cho comment con lùi về bên phải hơn so với comment cha */
+  }
+  
+  .comment-input-box {
+    margin-bottom: 20px;
+  }
+  
+  .comment-input-box textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .comment-input-box button {
+    background-color: #0079d3;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .comment-input-box button:hover {
+    background-color: #005ea6;
+  }
+  

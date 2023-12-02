@@ -1,0 +1,17 @@
+.search_container-item{
+    background-color: rgb(243, 239, 235);
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding : 10px;
+}
+
+.filterNav-item{
+    /* text-align:center */
+}
+
+.title_container-item{
+    background-color: rgb(243, 239, 235);
+    margin-bottom: 40px;
+    margin-top: 10px;
+    padding : 10px;
+}

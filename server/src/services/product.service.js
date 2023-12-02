@@ -1,6 +1,16 @@
 const { product, clothing, electronics } = require('../models/products.model');
 const { insertInventory } = require('../models/repositories/inventory.repo');
-const { findAllDraftsForShop, findAllPublishForShop, publishProductByShop, unPublishProductByShop, searchProductByUser, findAllProducts, findProduct, updateProductById_repo } = require('../models/repositories/product.repo');
+const {
+    findAllDraftsForShop,
+    findAllPublishForShop,
+    publishProductByShop,
+    unPublishProductByShop,
+    searchProductByUser,
+    findAllProducts,
+    getProductByCategory,
+    findProduct,
+    updateProductById_repo
+} = require('../models/repositories/product.repo');
 const { removeUndefinedObject, updateNestedObjectParser, convertToObjectIdMongoDb } = require('../utils');
 class ProductFactory {
     static async createProduct(type, payload) {
@@ -66,24 +76,20 @@ class ProductFactory {
         return await findProduct({ product_id, unselect: ['__v'] });
     }
 
-    // static async getProductByCategory({ 
-    //     limit = 50, 
-    //     sort = 'ctime', 
-    //     page = 1, 
-    //     filter = { isPublished: true, product_type : productType } 
-    // }){
-    //     return await getProductByCategory({
-    //         limit, sort, page, filter,
-    //         select: ['product_name', 'product_price', 'product_thumb', 'product_shop']
-    //     })
-    // }
+    static async getProductByCategory({ product_type, limit = 50, sort = 'ctime', page = 1 }) {
+        const query = { product_type, isDraft: false, isPublished: true };
+        return await getProductByCategory({
+            limit, sort, page, filter: query,
+            select: ['product_name', 'product_price', 'product_thumb', 'product_shop', 'product_description']
+        });
+    }
 }
 
 class Product {
     constructor({
         product_name, product_thumb, product_description,
         product_price, product_quantity, product_ratingsAverage, product_variations,
-        product_type, product_attributes, isDraft, isPublished, product_shop
+        product_type, product_attributes, isDraft, isPublished, product_shop, product_shop_name
     }) {
         this.product_name = product_name;
         this.product_thumb = product_thumb;
@@ -98,6 +104,7 @@ class Product {
         this.product_attributes = product_attributes;
         this.isDraft = isDraft;
         this.isPublished = isPublished;
+        this.product_shop_name = product_shop_name
     }
 
     //create product

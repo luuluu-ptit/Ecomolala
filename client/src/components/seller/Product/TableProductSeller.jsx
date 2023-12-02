@@ -1,15 +1,27 @@
 import { Table, Badge, Select } from "antd";
-// import { useSelector } from "react-redux";
 import "./tableProductSeller.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import ApiService from "../../../api/index";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+import ProductsSeller from "../../../store/actions/Seller/productsManager.action";
+import RowKey from "../../../store/actions/Seller/setSelectedRowKeys.action";
+
 const TableProductSeller = () => {
-  // const userAccount = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const userAccount = useSelector((state) => state.auth.user);
   const [listProduct, setListProduct] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  // const selectedRowKeys = useSelector(
+  //   (state) => state.setSelectedRowKeys.selectedRowKeys
+  // );
+  // const listProduct = useSelector(
+  //   (state) => state.productsSellerReducer.products
+  // );
+
   // console.log(userAccount);
   //Table Component--------------------------------------------
   const columns = [
@@ -18,9 +30,9 @@ const TableProductSeller = () => {
       dataIndex: "product_thumb",
       render: (text, record, index) => {
         return (
-          <div className="prod-name">
+          <div style={{ width: 30 }} className="prod-name">
             <div className="prod-img-preview">
-              <img src={record?.product_thumb} alt="#imgPreview" />
+              <img src={record?.product_thumb[0]} alt="#imgPreview" />
             </div>
           </div>
         );
@@ -56,7 +68,7 @@ const TableProductSeller = () => {
             {record?.isPublished ? (
               <Badge status="success" text="Public" />
             ) : (
-              <Badge status="warning" text="UnPublic" />
+              <Badge status="error" text="Private" />
             )}
           </>
         );
@@ -64,11 +76,10 @@ const TableProductSeller = () => {
     },
   ];
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
+    // dispatch(RowKey.setSelectedRowKeys(newSelectedRowKeys));
   };
   const rowSelection = {
     selectedRowKeys,
@@ -77,7 +88,7 @@ const TableProductSeller = () => {
 
   //Selected Component-----------------------------------------
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
   };
 
   const options = [
@@ -101,16 +112,18 @@ const TableProductSeller = () => {
 
   //----------------------------------------------------------
   useEffect(() => {
-    getAllProducts();
+    getAllProductsShop();
   }, []);
 
-  const getAllProducts = async () => {
-    const res = await ApiService.getAllPublishForShop();
-    if (res && res?.data?.metadata) {
-      const prodList = res.data.metadata;
-      const dataList = prodList?.map((item, index) => {
+  const getAllProductsShop = async () => {
+    const res1 = await ApiService.getAllPublishForShop();
+    const res2 = await ApiService.getAllDraftsForShop();
+    if (res1 && res2 && res1?.data?.metadata && res2?.data?.metadata) {
+      const res = [...res1.data.metadata, ...res2.data.metadata];
+      const prodList = res;
+      const dataList = prodList?.map((item) => {
         return {
-          key: index,
+          key: item._id,
           product_name: item.product_name,
           product_price: item.product_price,
           product_type: item.product_type,
@@ -120,9 +133,32 @@ const TableProductSeller = () => {
         };
       });
       setListProduct(dataList);
-      console.log(dataList);
+      // dispatch(ProductsSeller.productsSeller(res));
+
+      // console.log(dataList);
     }
-    console.log("res >>>", res);
+    // console.log("re1s >>>", res1, "res2 >>>", res2);
+  };
+
+  const publishProductByShop = async (keyID) => {
+    console.log(selectedRowKeys, "selectedRowKeys1");
+    const res = await ApiService.publishProductByShop(keyID);
+    if (res) {
+      alert("Mở bán sản phẩm thành công...");
+      getAllProductsShop();
+      setSelectedRowKeys([]);
+    }
+    // console.log("publishProductByShop >>>", res);
+  };
+
+  const unPublishProductByShop = async (keyID) => {
+    const res = await ApiService.unPublishProductByShop(keyID);
+    if (res) {
+      alert("Lưu trữ sản phẩm thành công...");
+      getAllProductsShop();
+      setSelectedRowKeys([]);
+    }
+    // console.log("unPublishProductByShop >>>", res);
   };
 
   return (
@@ -156,15 +192,33 @@ const TableProductSeller = () => {
                 <span style={{ padding: "5px 8px", border: "1px solid black" }}>
                   {`Selected ${selectedRowKeys.length} items`}
                 </span>
-                <span style={{ padding: "5px 8px", border: "1px solid black" }}>
-                  Disable
+                <span
+                  style={{
+                    padding: "5px 8px",
+                    border: "1px solid black",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    publishProductByShop(selectedRowKeys[0]);
+                  }}
+                >
+                  Public
                 </span>
-                <span style={{ padding: "5px 8px", border: "1px solid black" }}>
-                  Enable
+                <span
+                  style={{
+                    padding: "5px 8px",
+                    border: "1px solid black",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    unPublishProductByShop(selectedRowKeys[0]);
+                  }}
+                >
+                  Private
                 </span>
-                <span style={{ padding: "5px 8px", border: "1px solid black" }}>
+                {/* <span style={{ padding: "5px 8px", border: "1px solid black" }}>
                   Delete
-                </span>
+                </span> */}
               </div>
             ) : (
               ""
@@ -196,6 +250,7 @@ const TableProductSeller = () => {
           rowSelection={rowSelection}
           columns={columns}
           dataSource={listProduct}
+          // dataSource={memoizedListProduct()}
         />
       </div>
     </>

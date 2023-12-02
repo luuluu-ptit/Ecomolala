@@ -16,7 +16,7 @@ const ListProduct = () => {
 
   const fetchAllProduct = async () => {
     const res = await ApiService.findAllProducts();
-    // console.log("check res", res);
+    console.log("check res", res);
     if (res && res.data) {
       setListProduct(res.data.metadata);
     }
@@ -33,8 +33,8 @@ const ListProduct = () => {
         <div className="list-category">
           <CategoryProduct />
         </div>
-        <h3 style={{ color: "blue" }}>Sản Phẩm Nổi Bật</h3>
-        <div className="list-card">
+        <h3 style={{ color: "blue" }}>SẢN PHẨM NỔI BẬT</h3>
+        <div className="list-card list-product">
           {listProduct?.map((item, index) => {
             return (
               <div
@@ -43,7 +43,7 @@ const ListProduct = () => {
                 onClick={(e) => handleRedirect(e, item._id)}
               >
                 <a href="" className="card-media">
-                  <img src={item.product_thumb} alt="#catdImg" />
+                  <img src={item.product_thumb[0]} alt="#catdImg" />
                 </a>
                 <a href="" className="tag-discount">
                   Discount
@@ -54,7 +54,7 @@ const ListProduct = () => {
                 <p className="card-desc">{item.product_description}</p>
                 <a className="card-info">
                   <div className="card-price">{item.product_price}</div>
-                  <div className="card-sold">Đã bán 12k</div>
+                  <div className="card-sold">Sold 12k</div>
                 </a>
               </div>
             );

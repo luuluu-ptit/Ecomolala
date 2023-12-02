@@ -9,7 +9,8 @@ const COLLECTION_NAME = 'Products';
 // Declare the Schema of the Mongo model
 var productSchema = new Schema({
     product_name: { type: String, required: true },
-    product_thumb: { type: String, required: true },
+    // product_thumb: { type: String, required: true },
+    product_thumb: { type: Array, default: [""], required: true },
     product_description: String,
     product_slug: String,
     product_price: {
@@ -31,6 +32,7 @@ var productSchema = new Schema({
         enum: ['Electronics', 'Clothing', 'Furniture']
     },
     product_shop: { type: Schema.Types.ObjectId, ref: 'Shop' },
+    product_shop_name: { type: String, default: 'unknown' },
     product_attributes: { type: Schema.Types.Mixed, require: true, },
     isDraft: {
         type: Boolean,

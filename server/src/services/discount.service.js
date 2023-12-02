@@ -23,12 +23,12 @@ class discountService {
                 min_order_value, shopId, is_active, applies_to, product_ids
             } = payload;
 
-            if (new Date() < new Date(startDate) || new Date() > new Date(endDate)) {
-                return {
-                    code: 409,
-                    message: "Cannot create discount"
-                }
-            }
+            // if (new Date() > new Date(startDate) || new Date() > new Date(endDate)) {
+            //     return {
+            //         code: 409,
+            //         message: "Cannot create discount"
+            //     }
+            // }
             if (new Date(endDate) < new Date(startDate)) {
                 return {
                     code: 409,

@@ -154,6 +154,30 @@ const logout = async () => {
         }
     }
 }
+const updateInformationAccessOfUser = async (name, email) => {
+    try {
+        const body = {};
+        if (!name) body.name = name;
+        if (email) body.email = email;
+        const res = await API.patch(`/action/shop/updateInformationAccessOfUser`, body, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+
+        return res;
+    } catch (error) {
+        if (error.response && error.response.status === 409) {
+            // Handle the conflict here. For example, you might want to prompt the user to enter a different name or email.
+            alert('A conflict occurred. Please try again with a different name or email.');
+        } else {
+            // If it's not a 409 conflict, rethrow the error.
+            throw error;
+        }
+    }
+};
 //Cart
 const addProductToCart = async (product) => {
     try {
@@ -323,10 +347,222 @@ const getListSearchProduct = async (value) => {
         }
     }
 }
-const findAllProducts = () => API.get(`/product/`, { headers: { "x-api-key": API_KEY } });
+const findAllProducts = () => {
+    return API.get(`/product/`, { headers: { "x-api-key": API_KEY } });
+}
+const getProductByCategory = (productType) => {
+    return API.get(`/product/category`, {
+        headers: {
+            "x-api-key": API_KEY
+        },
+        params: {
+            product_type: productType
+        }
+    });
+}
 const findProduct = (id) => API.get(`/product/${id}`, { headers: { "x-api-key": API_KEY } });
 const createProduct = (data) => API.post(`/product/`, { ...data }, { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
 
+const getAllPublishForShop = async () => {
+    try {
+        const response = await API.get(`/product/published/all`, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+        console.log("getAllPublishForShop", response)
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+const getAllDraftsForShop = async () => {
+    try {
+        const response = await API.get(`/product/drafts/all`, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+        console.log("getAllDraftsForShop", response)
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+const updateProduct = async (brand, material, size, product_name, product_description, product_type, productId) => {
+    try {
+        const response = await API.patch(`/product/${productId}`, {
+            product_attributes: {
+                brand: brand,
+                material: material,
+                size: size,
+            },
+            product_name: product_name,
+            product_description: product_description,
+            product_type: product_type
+        }, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+        console.log("updateProduct", response)
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+const publishProductByShop = async (id) => {
+    try {
+        const response = await API.post(`/product/publish/${id}`, {}, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+        // console.log("publishProductByShop", response);
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+const unPublishProductByShop = async (id) => {
+    try {
+        // console.log(id, "id");
+        const response = await API.post(`/product/unpublish/${id}`, {}, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+        // console.log("unPublishProductByShop", response);
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
+
+//COMMENTS
+const createComment = (id, content, parentCommentId) => {
+    return API.post(`/comment`, {
+        productId: id,
+        content: content,
+        parentCommentId: parentCommentId,
+    }, {
+        headers: {
+            "x-api-key": API_KEY,
+            "x-client-id": USER_ID,
+            "authorization": AUTHORIZATION
+        }
+    });
+}
+const getCommentsByParentComment = (id, parentCommentId) => {
+    return API.get(`/comment`, {
+        headers: {
+            "x-api-key": API_KEY
+        },
+        params: {
+            productId: id,
+            parentCommentId: parentCommentId
+        }
+    });
+}
+
+//DISCOUNT
+const createDiscount = async (dataNewDiscount) => {
+    try {
+        const response = await API.post(`/discount`, { ...dataNewDiscount }, {
+            headers: {
+                "x-api-key": API_KEY,
+                "x-client-id": USER_ID,
+                "authorization": AUTHORIZATION
+            }
+        });
+        // console.log("createDiscount", response); 
+        return response;
+    } catch (error) {
+        // throw error;
+        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            throw error.response.data;
+        } else if (error.request) {
+            // The request was made but no response was received
+            throw error.request;
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            throw error.message;
+        }
+    }
+}
 
 
 
@@ -335,22 +571,19 @@ const changePassword = async (formData) => API.post('/shop/changePassword', form
 const cancellationOfSales = async (formData) => API.post('/shop/cancellationOfSales', formData, { headers: { "x-api-key": API_KEY } });
 //SHOP
 const addLikedProduct = async (page) => API.post(`/action/shop/addLikedProduct/:id`, { headers: { "x-api-key": API_KEY } });
-const updateInformationAccessOfUser = async (newCart) => API.patch('/action/shop/updateInformationAccessOfUser', newCart, { headers: { "x-api-key": API_KEY } });
 
-
-const updateProduct = async (page) => API.patch(`/product/:productId`, { headers: { "x-api-key": API_KEY } });
-const publishProductByShop = async (name) => API.post(`/product/publish/:id`, { headers: { "x-api-key": API_KEY } });
-const unPublishProductByShop = async (searchQuery) => API.post(`/product/unpublish/:id`, { headers: { "x-api-key": API_KEY } });
-const getAllPublishForShop = () => API.get(`/product/published/all`, { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
-const getAllDraftsForShop = () => API.get('/product/drafts/all', { headers: { "x-api-key": API_KEY, "x-client-id": USER_ID, "authorization": AUTHORIZATION } });
-//DISCOUNT
-const createDiscount = (page) => API.post(`/discount/`, { headers: { "x-api-key": API_KEY } });
 const updateDiscountService = (newCart) => API.patch('/discount/:discount_id', newCart, { headers: { "x-api-key": API_KEY } });
 const getDiscountAmount = (id, updatedPost) => API.post(`/discount/amount`, updatedPost, { headers: { "x-api-key": API_KEY } });
 const getAllDiscountWithProduct = (id) => API.get(`/discount/list_product_code`, { headers: { "x-api-key": API_KEY } });
 const getAllDiscountByShop = (id) => API.get(`/discount/`, { headers: { "x-api-key": API_KEY } });
 const deleteDiscount = (id) => API.delete(`/discount/`, { headers: { "x-api-key": API_KEY } });
 const cancelDiscount = (id) => API.patch(`/discount/`, { headers: { "x-api-key": API_KEY } });
+
+
+
+//ADMIN 
+const getAllUsers = async (id) => await API.patch(`/discount/`, { headers: { "x-api-key": API_KEY } });
+
 
 export default {
     login,
@@ -384,4 +617,10 @@ export default {
     getAllDiscountByShop,
     deleteDiscount,
     cancelDiscount,
+    getProductByCategory,
+    createComment,
+    getCommentsByParentComment,
+
+    //ADMIN
+    getAllUsers
 }

@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.get('/search/:keySearch', asyncHandler(ProductController.getListSearchProduct));
 router.get('', asyncHandler(ProductController.findAllProducts));
+router.get('/category', asyncHandler(ProductController.getProductByCategory));
 router.get('/:product_id', asyncHandler(ProductController.findProduct));
 
 //authentication - middeleware

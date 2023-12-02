@@ -48,10 +48,11 @@
 
 const orderModel = require("../models/order.model");
 const { findCartById } = require("../models/repositories/cart.repo");
+const { reservationInventory } = require("../models/repositories/inventory.repo");
 const { checkProductsByServer } = require("../models/repositories/product.repo");
 const { convertToObjectIdMongoDb } = require("../utils");
 const { getDiscountAmount } = require("./discount.service");
-const { createLock } = require("./redis.service");
+const { createLock, deleteLock } = require("./redis.service");
 
 class checkoutService {
 
@@ -169,20 +170,31 @@ class checkoutService {
 
             const products = await shopOrderIdsNew.flatMap(order => order.item_products);
 
-            const createKeyLockProduct = [];
+            // const createKeyLockProduct = [];
+            let reservation = {};
 
             for (let i = 0; i < products.length; i++) {
                 const { productId, quantity } = products[i];
 
-                const keyLock = await createLock(productId, quantity, cartId);
-                createKeyLockProduct.push(keyLock ? true : false);
-                if (keyLock) {
-                    await deleteKeyLock(keyLock);
-                }
+                // const keyLock = await createLock(productId, quantity, cartId);
+                // createKeyLockProduct.push(keyLock ? true : false);
+                // if (keyLock) {
+                //     await deleteLock(keyLock);
+                // }
+                reservation = await reservationInventory({
+                    productId, quantity, cartId
+                })
             }
 
             //neu co 1 sp het hang
-            if (createKeyLockProduct.includes(false)) {
+            // if (createKeyLockProduct.includes(false)) {
+            //     return {
+            //         code: 409,
+            //         message: "Mot so san pham da het hang, vui long quay lai gio hang..."
+            //     }
+            // }
+
+            if (reservation.ok === 0) {
                 return {
                     code: 409,
                     message: "Mot so san pham da het hang, vui long quay lai gio hang..."
@@ -214,7 +226,7 @@ class checkoutService {
         // laasy tong don hang hien co
         try {
             const orders = await orderModel.find({ order_userId: userId });
-            if (!order) {
+            if (!orders) {
                 return {
                     code: 409,
                     message: "Orders not found"
@@ -258,6 +270,7 @@ class checkoutService {
                 _id: convertToObjectIdMongoDb(orderId),
                 order_userId: userId
             }, { order_status: 'canceled' }, { new: true });
+
             if (!order) {
                 return {
                     code: 409,

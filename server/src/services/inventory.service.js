@@ -9,6 +9,7 @@ class InventoryService {
         location = "180 Trieu khuc, Thanh Xuan, Ha Noi"
     }) {
         const product = await getProductById(productId);
+        console.log(product, "InventoryService")
         if (!product) {
             return {
                 code: 409,
@@ -19,17 +20,19 @@ class InventoryService {
         const query = {
             inventory_productId: productId,
             inventory_shopId: shopId,
-        }, updateInventory = {
-            $inc: {
-                inventory_stock: stock
+        },
+            updateInventory = {
+                $inc: {
+                    inventory_stock: stock
+                },
+                $set: {
+                    inventory_location: location
+                }
             },
-            $set: {
-                inventory_location: location
-            }, options: {
+            options = {
                 upsert: true,
                 new: true
             }
-        }
 
         return {
             code: 200,

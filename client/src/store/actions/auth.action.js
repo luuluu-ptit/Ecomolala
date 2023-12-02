@@ -6,7 +6,9 @@ import {
     LOGOUT,
     SET_MESSAGE,
     CONVERTROLEUSERTOSELLER_SUCCESS,
-    CONVERTROLEUSERTOSELLER_FAIL
+    CONVERTROLEUSERTOSELLER_FAIL,
+    UPDATE_INFORMATION_USER_SUCCESS,
+    UPDATE_INFORMATION_USER_FAIL
 } from "../../constants/actionTypes.constants";
 
 import APIService from "../../api/index.js"
@@ -121,9 +123,37 @@ const convertRoleUsertoSeller = () => async (dispatch) => {
 
 };
 
+const updateInformationAccessOfUser = (name, email) => async (dispatch) => {
+    try {
+        dispatch({
+            type: UPDATE_INFORMATION_USER_SUCCESS,
+            payload: {
+                name, email
+            }
+        });
+
+        return Promise.resolve();
+    } catch (error) {
+        const message =
+            (error.response && error.response.data &&
+                error.response.data.metadata &&
+                error.response.data.metadata.message) ||
+            error.message ||
+            error.toString();
+
+        dispatch({
+            type: UPDATE_INFORMATION_USER_FAIL,
+        });
+
+        return Promise.reject(message);
+    }
+
+};
+
 export default {
     register,
     login,
     logout,
-    convertRoleUsertoSeller
+    convertRoleUsertoSeller,
+    updateInformationAccessOfUser
 }
