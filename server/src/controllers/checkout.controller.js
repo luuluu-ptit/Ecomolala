@@ -65,7 +65,7 @@ class CheckoutController {
     getOneOrderByUser = async (req, res, next) => {
 
         try {
-            console.log(req.params.orderId, "req.params.orderId")
+            // console.log(req.query.orderId, "req.query.orderId")
             const result = await checkoutService.getOneOrderByUser({
                 userId: req.user.userId,
                 orderId: req.query.orderId
@@ -82,10 +82,12 @@ class CheckoutController {
         }
     }
 
-    cancelOrderByUser = async (req, res, next) => {
+    CancelOrderByUser = async (req, res, next) => {
+        console.log("req.query.orderIdXX111")
 
         try {
-            const result = await checkoutService.orderByUser({
+            // console.log(req.query.orderId, "req.query.orderIdXX")
+            const result = await checkoutService.cancelOrderByUser({
                 userId: req.user.userId,
                 orderId: req.query.orderId
             })

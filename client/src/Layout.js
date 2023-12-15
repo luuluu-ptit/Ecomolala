@@ -18,9 +18,6 @@ import UpdateProductPage from './components/seller/Product/UpdateProductPage ';
 import ForgotPassword from './pages/Password/forgotpassword';
 import ResetPassword from './pages/Password/resetPassword';
 import CategoryPage from './pages/Category';
-import AdminBoard from './pages/Adminboard';
-import DashBoardAdmin from './components/Admin/DashBoard';
-import TableUserManagerment from './components/Admin/TableUserManagerment';
 import { AddDiscountPage } from './components/seller/Discounts/createDiscount';
 
 function Layout() {
@@ -53,22 +50,10 @@ function Layout() {
                     <Route path="products-manage" element={<TableProductSeller />} />
                     <Route path="new-product" element={<AddProductPage />} />
                     {/* <Route path="update-product" element={<UpdateProductPage />} /> */}
-
                     <Route path="new-discount" element={<AddDiscountPage />} />
                     {/* <Route path="get-discount-shop" element={<AddProductPage />} /> */}
                     {/* <Route path="get-discount-product-shop" element={<AddProductPage />} /> */}
                 </Route>
-            </Routes>
-
-            <Routes>
-                <Route path="/admin" element={<AdminBoard />}>
-                    <Route index element={<DashBoardAdmin />} />
-                    <Route path="user-manage" element={<TableUserManagerment />} />
-                </Route>
-
-                <Route path="admin/login" element={<Login />} />
-                <Route path="admin/forgot-password" element={<ForgotPassword />} />
-                <Route path="admin/reset-password/:resetToken" element={<ResetPassword />} />
             </Routes>
         </Router>
     );

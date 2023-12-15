@@ -2,7 +2,8 @@ import {
     GET_PRODUCT_LIST_CART,
     ADD_PRODUCT_LIST_CART,
     UPDATE_QUANITY_PRODUCT_LIST_CART,
-    DELETE_PRODUCT_LIST_CART
+    DELETE_PRODUCT_LIST_CART,
+    SET_SELECTED_PRODUCTS
 } from "../../constants/actionTypes.constants";
 
 // import APIService from "../../api/index.js"
@@ -91,10 +92,30 @@ const deletItemCart = (productId) => async (dispatch) => {
     }
 }
 
+const setSelectedProducts = (selectedProducts) => async (dispatch) => {
+    try {
+        dispatch({
+            type: SET_SELECTED_PRODUCTS,
+            payload: selectedProducts,
+        });
+
+        return Promise.resolve();
+    } catch (error) {
+        const message =
+            (error.response && error.response.data &&
+                error.response.data.metadata &&
+                error.response.data.metadata.message) ||
+            error.message ||
+            error.toString();
+        return Promise.reject(error);
+    }
+};
+
 
 export default {
     getProductListCart,
     addProductListCart,
     updateProductListCart,
-    deletItemCart
+    deletItemCart,
+    setSelectedProducts
 }

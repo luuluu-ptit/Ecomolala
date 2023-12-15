@@ -69,7 +69,6 @@ class checkoutService {
                     message: "Cart not exists"
                 }
             }
-
             const checkoutOrder = {
                 totalPrice: 0,
                 feeShip: 0,

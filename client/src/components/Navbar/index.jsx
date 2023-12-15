@@ -39,8 +39,8 @@ const NavBar = () => {
   const [search, setSearch] = useState("");
 
   const { user: currentUser } = useSelector((state) => state.auth);
-  const { roles } = useSelector((state) => state.auth?.user?.shop);
-  console.log(roles, "roles");
+  const { roles } = useSelector((state) => state.auth?.user?.shop) || [];
+  // console.log(roles, "roles");
   const isShopPermission = roles.includes("SHOP");
 
   const { cart_products } = useSelector((state) => state.cartReducer);

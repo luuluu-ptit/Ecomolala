@@ -1,12 +1,12 @@
 import "./cart.scss";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // import ImgProduct from "../../assets/banner-4.jpg";
 import { Row, Col, Divider, Checkbox, InputNumber, Button, Tag } from "antd";
-import { DeleteTwoTone } from "@ant-design/icons";
+import { DeleteTwoTone, ShopOutlined } from "@ant-design/icons";
 
 import Cart from "../../store/actions/cart.action";
 import ApiService from "../../api/index";
@@ -18,13 +18,13 @@ const CartPage = () => {
   const { cart_products } = useSelector((state) => state.cartReducer);
   // console.log(cart_products, "cart_productsXX999");
   const totalPrice = useMemo(() => {
-    return cart_products.reduce((totalPrice, item) => {
+    return cart_products?.reduce((totalPrice, item) => {
       return (totalPrice += item.quantity * item.price);
     }, 0);
   }, [cart_products]);
 
   const hanldeUpdateQuanityProduct = async (newValue, productId) => {
-    const shop_order_ids = cart_products.map((item) => ({
+    const shop_order_ids = cart_products?.map((item) => ({
       shopId: item.shopId,
       item_products: [
         {
@@ -40,9 +40,9 @@ const CartPage = () => {
 
     try {
       const response = await ApiService.updateProductQuantity(shop_order_ids);
+      //   console.log("res detai123l", response);
       if (response) {
         dispatch(Cart.updateProductListCart(response.data.metadata.metadata));
-        // console.log("res detai123l", response);
       }
     } catch (error) {
       console.error(error);
@@ -52,15 +52,32 @@ const CartPage = () => {
   const deletItemCart = async (productId) => {
     console.log("error deleting");
     try {
-      console.log("0000response12345@@");
+      // console.log("0000response12345@@");
       const response = await ApiService.deletItemCart(productId);
-      console.log(response, "response12345@@");
+      // console.log(response, "response12345@@");
       if (response) {
         dispatch(Cart.deletItemCart(productId));
       }
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+  const handleCheckProduct = (productId) => {
+    setSelectedProducts((prevSelectedProducts) => {
+      if (prevSelectedProducts.includes(productId)) {
+        return prevSelectedProducts.filter((id) => id !== productId);
+      } else {
+        return [...prevSelectedProducts, productId];
+      }
+    });
+  };
+
+  const handleBuy = () => {
+    dispatch(Cart.setSelectedProducts(selectedProducts));
+    navigate("/checkout");
   };
 
   return (
@@ -87,18 +104,21 @@ const CartPage = () => {
           <div className="list-product">
             {cart_products?.map((item) => (
               <div key={item.productId} className="product-item">
-                <Tag bordered={false} color="error" className="shop-name">
-                  MenSwear Shop giá rẻ
+                <Tag bordered={false} color="processing" className="shop-name">
+                  <ShopOutlined /> Cửa Hàng: {item.product_shop_name}
                 </Tag>
                 <Row>
                   <Col span={10}>
                     <Row gutter={[20]}>
                       <Col span={2}>
-                        <Checkbox />
+                        <Checkbox
+                          checked={selectedProducts.includes(item.productId)}
+                          onChange={() => handleCheckProduct(item.productId)}
+                        />
                       </Col>
                       <Col span={8}>
                         <div className="media-product">
-                          <img src={item.product_thumb} alt="#imgProd" />
+                          <img src={item.product_thumb[0]} alt="#imgProd" />
                         </div>
                       </Col>
                       <Col span={14}>
@@ -109,7 +129,7 @@ const CartPage = () => {
                   <Col span={6}>
                     <div className="quantity-prod">
                       <InputNumber
-                        min={1}
+                        min={0}
                         max={100}
                         defaultValue={1}
                         style={{ width: 200 }}
@@ -139,26 +159,26 @@ const CartPage = () => {
                 </Row>
               </div>
             ))}
-
-            <div className="payment">
-              <Row>
-                <Col span={18}></Col>
-                <Col span={4}>
-                  <span>Tổng tiền: {totalPrice} VNĐ</span>
-                </Col>
-                <Col span={2}>
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={async () => {
-                      navigate("/checkout");
-                    }}
-                  >
-                    Mua hàng
-                  </Button>
-                </Col>
-              </Row>
-            </div>
+          </div>
+          <div className="payment">
+            <Row>
+              <Col span={18}></Col>
+              <Col span={4}>
+                <span>Tổng tiền: {totalPrice} VNĐ</span>
+              </Col>
+              <Col span={2}>
+                <Button
+                  type="primary"
+                  danger
+                  // onClick={async () => {
+                  //   navigate("/checkout");
+                  // }}
+                  onClick={handleBuy}
+                >
+                  Mua hàng
+                </Button>
+              </Col>
+            </Row>
           </div>
         </div>
       </div>

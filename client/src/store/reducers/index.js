@@ -6,13 +6,14 @@ import cartReducer from "./cart.reducer";
 import productsSellerReducer from "./Seller/productManager.reducer";
 import setSelectedRowKeys from "./Seller/selectedRowKeys.reducer";
 
+
 const rootReducer = combineReducers({
     auth,
     message,
     products: productReducer,
     cartReducer,
     productsSellerReducer,
-    setSelectedRowKeys
+    setSelectedRowKeys,
 })
 
 export default rootReducer;

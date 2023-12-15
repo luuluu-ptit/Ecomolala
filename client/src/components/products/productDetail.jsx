@@ -62,6 +62,7 @@ const ProductDetail = () => {
       ]);
 
       setComments([...comments, newComment]);
+      fetchComments();
     } else {
       console.error(
         "response.data.metadata is undefined or not in the expected format"
@@ -132,7 +133,8 @@ const ProductDetail = () => {
       if (response.data.metadata) {
         dispatch(Cart.addProductListCart(response.data.metadata));
         alert("Sản phẩm đã được thêm vào giỏ hàng");
-        navigate.push("/cart");
+        // navigate.push("/cart");
+        navigate("/cart");
         // console.log("res detai123l", response.data.metadata);
       } else {
         alert("Có lỗi xảy ra, vui lòng thử lại");
@@ -295,7 +297,7 @@ const ProductDetail = () => {
           gutter={[20, 20]}
         >
           <h1>
-            MÔ TẢ SẢN PHẨM : <br></br>
+            MÔ TẢ SẢN PHẨM <br></br>
             <p style={{ marginTop: 10 }}>
               {productDetail?.product_description}
             </p>

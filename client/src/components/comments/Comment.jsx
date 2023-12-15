@@ -37,7 +37,7 @@ export default function Comment({ comment, addReply }) {
           <button type="submit">Submit</button>
         </form>
       ) : null}
-      {comment.children.map((child) => (
+      {comment?.children?.map((child) => (
         <Comments
           key={comment._id}
           parentCommentId={child._id}

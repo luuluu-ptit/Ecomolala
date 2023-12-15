@@ -9,10 +9,11 @@ router.use(apiKey);
 
 // check permissions
 router.use(permissions('0000'));
-
 router.use('/api/v1/comment', require('./comment'));
+
 router.use('/api/v1/checkout', require('./checkout'));
 router.use('/api/v1/discount', require('./discount'));
+// router.use(permissions('0001'));
 router.use('/api/v1/cart', require('./cart'));
 router.use('/api/v1/inventory', require('./inventory'));
 router.use('/api/v1/product', require('./product'));

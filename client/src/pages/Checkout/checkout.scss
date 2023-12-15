@@ -17,18 +17,18 @@
             padding: 20px 15px;
         }
         .list-product-checkout{
+            width: 100%;
+            height: 100px;
             display: flex;
             flex-direction: column;
             gap: 25px;
             .item-checkout{
-                background-color: #ffffff;
-                padding: 15px;
 
                 .shop-name{
                     display: inline-block;
                     margin-left: 40px;
                     margin-bottom: 15px;
-                  font-size: 16px;
+                    font-size: 16px;
                     padding: 3px 8px;
                 }
                 .media-checkout{
@@ -37,11 +37,40 @@
                     }
                 }
             }
-            .payment-checkout{
-                margin-top: 30px;
-                background-color: #ffffff;
-                padding: 20px 15px;
-            }
         }
     }
 }
+.media-product-checkout{
+    margin-left: 20px;
+    // margin: 20px;
+    width: 60px;
+    height: 50px;
+    // height: 40px;
+    // object-fit: cover;
+}
+.payment-checkout{
+    margin-top: 30px;
+    background-color: #ffffff;
+    padding: 20px 15px;
+}
+
+.item-checkout{
+    background-color: #ffffff;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.input-style-checkout {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.title-list-discount{
+    margin : 10px 0 5px 0;
+}
+   
+
+
+   

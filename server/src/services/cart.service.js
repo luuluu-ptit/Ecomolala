@@ -153,9 +153,23 @@ class cartService {
                 }
             }
 
-            if ((quantity - old_quantity) <= 0) {
+            // if ((quantity) <= 0) {
+            //     //delete product
+            //     return await cartService.deletItemCart({ userId, productId })
+            // }
+
+            if ((quantity) <= 0) {
                 //delete product
-                return await cartService.deletItemCart({ userId, productId })
+                // return await cartService.deletItemCart({ userId, productId })
+                const deleteCart = await cartService.deletItemCart({ userId, productId })
+
+                if (deleteCart.code === 200) {
+                    const updatedCart = await cartService.getListCart({ userId });
+                    return {
+                        code: 200,
+                        metadata: updatedCart
+                    };
+                }
             }
 
             const updatedProduct = await cartService.updateUserCartquantity({
@@ -166,9 +180,13 @@ class cartService {
                 }
             })
 
+            // After updating the product quantity, fetch the updated cart
+            // const updatedCart = await cartService.getListCart({ userId });
+
             return {
                 code: 200,
                 metadata: updatedProduct
+                // metadata: updatedCart
             };
         } catch (error) {
             throw error;

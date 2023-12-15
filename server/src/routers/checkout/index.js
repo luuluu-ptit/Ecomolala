@@ -17,7 +17,8 @@ router.post('/orderByUser', asyncHandler(checkoutController.orderByUser));
 
 router.get('/getOrders', asyncHandler(checkoutController.getOrdersByUser));
 router.get('/order', asyncHandler(checkoutController.getOneOrderByUser));
-router.patch('/cancelOrder', asyncHandler(checkoutController.cancelOrderByUser));
+router.patch('/cancelOrder', asyncHandler(checkoutController.CancelOrderByUser));
+
 
 // check permission
 // router.use(authPermissions(["SHOP","ADMIN"]));

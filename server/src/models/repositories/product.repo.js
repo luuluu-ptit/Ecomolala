@@ -210,7 +210,8 @@ const checkProductByServer = async (product) => {
             price: foundProduct.product_price,
             name: foundProduct.product_name,
             quantity: product.quantity,
-            product_thumb: foundProduct.product_thumb
+            product_thumb: foundProduct.product_thumb,
+            product_shop_name: foundProduct.product_shop_name
         }
     }
 
@@ -224,6 +225,15 @@ const checkProductsByServer = async (products) => {
                 price: foundProduct.product_price,
                 quantity: product.quantity,
                 productId: product.productId,
+
+                product_shop_name: foundProduct.product_shop_name,
+                product_thumb: foundProduct.product_thumb,
+                name: foundProduct.product_name,
+                shopId: foundProduct.shopId,
+
+
+
+
             }
         }
     }))

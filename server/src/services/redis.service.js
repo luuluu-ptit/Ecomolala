@@ -4,7 +4,11 @@ const { reservationInventory } = require('../models/repositories/inventory.repo'
 
 const redisClient = redis.createClient({
     host: process.env.REDIS_HOSTNAME,
-    port: parseInt(process.env.REDIS_PORT)
+    port: parseInt(process.env.REDIS_PORT),
+    legacyMode: false,
+    socket: {
+        connectTimeout: 10000
+    }
     // password: process.env.REDIS_PASSWORD
 });
 
